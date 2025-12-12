@@ -15,7 +15,8 @@ namespace BDD_Salle_de_Sport
             if (connection != null)
             {
                 connection.Close();
-            }            
+            }
+            Console.ReadKey();
         }
         static MySqlConnection ConnectToDatabase()
         {
