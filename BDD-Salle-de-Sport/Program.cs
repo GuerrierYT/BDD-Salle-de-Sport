@@ -12,7 +12,10 @@ namespace BDD_Salle_de_Sport
         static void Main(string[] args)
         {
             MySqlConnection connection = ConnectToDatabase();
-            connection.Close();
+            if (connection != null)
+            {
+                connection.Close();
+            }            
         }
         static MySqlConnection ConnectToDatabase()
         {
