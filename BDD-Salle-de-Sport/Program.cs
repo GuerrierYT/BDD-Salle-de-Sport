@@ -140,7 +140,7 @@ namespace BDD_Salle_de_Sport
         }
         */
 
-        public static MySqlConnection ConnecterEnTantQueMembre()
+        static MySqlConnection ConnecterEnTantQueMembre()
         {
             // On utilise le login restreint "membre_client"
             string connectionString = "server=localhost;user=membre_client;database=GestionSalleSport;port=3306;password=Membre";
