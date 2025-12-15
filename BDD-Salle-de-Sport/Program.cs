@@ -16,13 +16,7 @@ namespace BDD_Salle_de_Sport
         }
         static MySqlConnection ConnectToDatabase()
         {
-            string login = "";
-            string password = "";
-            Console.Write("Login : ");
-            login = Console.ReadLine();
-            Console.Write("Password : ");
-            password = Console.ReadLine();
-            string connectionString = "server=localhost;user=" + login + ";database=GestionSalleSport;port=3306;password=" + password;
+            string connectionString = "server=localhost;user=root;database=GestionSalleSport;port=3306;password=root";
             MySqlConnection connection = new MySqlConnection(connectionString);
             try
             {
@@ -61,5 +55,31 @@ namespace BDD_Salle_de_Sport
         {
             ExecuteQuery(connection, "SELECT nom FROM Salle"); // Exemple de requête pour récupérer les noms des salles
         }
+        /*
+        static MySqlConnection ConnectToDatabase()
+        {
+            string login = "";
+            string password = "";
+            Console.Write("Login : ");
+            login = Console.ReadLine();
+            Console.Write("Password : ");
+            password = Console.ReadLine();
+            string connectionString = "server=localhost;user=" + login + ";database=GestionSalleSport;port=3306;password=" + password;
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            try
+            {
+                connection.Open(); // Ouvre la connexion
+                Console.WriteLine("Connection to database established successfully.");
+                InterfaceUtilisateur(connection);
+                return connection;
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine("Error connecting to database: " + ex.Message);
+                return null;
+            }
+
+        }
+        */
     }
 }
