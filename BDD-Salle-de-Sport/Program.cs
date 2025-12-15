@@ -17,9 +17,6 @@ namespace BDD_Salle_de_Sport
             }
             Console.ReadKey();
         }
-
-
-
         static MySqlConnection ConnectToDatabase() // Connexion en tant que root pour vérifier les identifiants
         {
             string connectionString = "server=localhost;user=root;database=GestionSalleSport;port=3306;password=root";
@@ -36,7 +33,6 @@ namespace BDD_Salle_de_Sport
                 return null;
             }
         }
-
         #region Requêtes SQL
         static void ExecuteQuery(MySqlConnection connection, string query) // Pour les requêtes qui retournent plusieurs lignes
         {
@@ -74,7 +70,6 @@ namespace BDD_Salle_de_Sport
             }
         }
         #endregion
-
         #region Gestion Connexion Utilisateur
         static bool UtilisateurEstAdmin(MySqlConnection connection, string login, string password) // Vérifie si l'utilisateur est un admin
         {
@@ -121,37 +116,6 @@ namespace BDD_Salle_de_Sport
             return connection;
         }
         #endregion
-
-        static void InterfaceUtilisateur(MySqlConnection connection)
-        {
-            ExecuteQuery(connection, "SELECT nom FROM Salle"); // Exemple de requête pour récupérer les noms des salles
-        }
-        /*
-        static MySqlConnection ConnectToDatabase()
-        {
-            string login = "";
-            string password = "";
-            Console.Write("Login : ");
-            login = Console.ReadLine();
-            Console.Write("Password : ");
-            password = Console.ReadLine();
-            string connectionString = "server=localhost;user=" + login + ";database=GestionSalleSport;port=3306;password=" + password;
-            MySqlConnection connection = new MySqlConnection(connectionString);
-            try
-            {
-                connection.Open(); // Ouvre la connexion
-                Console.WriteLine("Connection to database established successfully.");
-                InterfaceUtilisateur(connection);
-                return connection;
-            }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine("Error connecting to database: " + ex.Message);
-                return null;
-            }
-        }
-        */
-
         #region Interface
         static int InterfaceAdminPrincipal(MySqlConnection Connection, string espace)
         {
@@ -306,7 +270,6 @@ namespace BDD_Salle_de_Sport
             return rep;
         }
         #endregion
-
         #region Connexions Membres/Admins
         static MySqlConnection ConnecterEnTantQueMembre() // Connexion sécurisée pour les membres
         {
