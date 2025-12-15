@@ -809,7 +809,7 @@ namespace BDD_Salle_de_Sport
                     ModifierSesInfos(Connection, espace, membre);
                     break;
                 case 4: // Voir la liste des inscriptions
-
+                    AffichageInscription(Connection);
                     break;
                 case 5: // Retour au menu précédent
 
@@ -839,6 +839,14 @@ namespace BDD_Salle_de_Sport
                 "VALUES ('" + nom + "', '" + prenom + "', '" + adresse + "', '" + telephone + "', '" + email + "', '" + motDePasse + "', 1);");
 
             Console.WriteLine("Le membre a été ajouté !");
+        }
+        static void AffichageInscription(MySqlConnection connection) // FINI
+        {
+            Console.WriteLine("=== LISTE DES INSCRIPTIONS EN COURS (ID | Nom | Prénom | Email | Téléphone | Adresse) ===");
+            string sqlFutursMembres = "SELECT id_membre, nom, prenom, adresse_mail, numero_tel, adresse " +
+                                       "FROM Membre " +
+                                       "WHERE admis = 0";
+            ExecuteQueryAfficheTout(connection, sqlFutursMembres);
         }
         #endregion
 
