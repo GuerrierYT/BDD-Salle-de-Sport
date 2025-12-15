@@ -117,7 +117,7 @@ namespace BDD_Salle_de_Sport
                 }
             }
         }
-        static void ExecuteQueryAfficheTout(MySqlConnection connection, string query) 
+        static void ExecuteQueryAfficheTout(MySqlConnection connection, string query)
         {
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
@@ -278,7 +278,8 @@ namespace BDD_Salle_de_Sport
         }
 
         #endregion
-        static void SupprimerMembre(MySqlConnection connection, int idMembre) {
+        static void SupprimerMembre(MySqlConnection connection, int idMembre)
+        {
             string query = "DELETE FROM Membre WHERE id_membre = " + idMembre;
             ExecuteNonQuery(connection, query);
         }
@@ -424,7 +425,7 @@ namespace BDD_Salle_de_Sport
         }
         #endregion
 
-        #region Interface
+        #region Interface (pas fini)
         #region Interface Utilisateur (terminé)
         static void InterfaceConnexionUtilisateur(MySqlConnection connection, string espace)
         {
@@ -487,8 +488,8 @@ namespace BDD_Salle_de_Sport
         }
         #endregion
 
-        #region Interfaces Admins
-        #region Interfaces principales Admins
+        #region Interfaces Admins (pas fini)
+        #region Interfaces principales Admins (terminé)
         static bool InterfaceAdminPrincipal(MySqlConnection Connection, string espace) // FINI
         {
             int rep = 0;
@@ -589,7 +590,7 @@ namespace BDD_Salle_de_Sport
         }
         #endregion
 
-        #region Sous-interfaces Admins
+        #region Sous-interfaces Admins (terminé)
         static bool InterfaceGestionMembres(MySqlConnection Connection, string espace) // FINI
         {
             int rep = 0;
@@ -675,7 +676,7 @@ namespace BDD_Salle_de_Sport
             }
             return termine;
         }
-        static int InterfaceGestionCoachs(MySqlConnection Connection, string espace) // A FINIR
+        static int InterfaceGestionCoachs(MySqlConnection Connection, string espace) // FINI
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -704,20 +705,20 @@ namespace BDD_Salle_de_Sport
             {
 
                 case 1: //Ajouter un coach
+                    InterfaceAjouterCoach(Connection);
                     break;
-
                 case 2: // Supprimer un coach
+                    InterfaceSupprimerCoach(Connection);
                     break;
-
                 case 3: // Modifier un coach
+                    InterfaceModifierCoach(Connection);
                     break;
-
                 case 4: // Rechercher un coach
+                    InterfaceRechercherCoach(Connection);
                     break;
-
                 case 5: // Voir la liste des coachs
+                    InterfaceAffichageCoachs(Connection);
                     break;
-
                 case 6: // Retour au menu précédent
                     break;
 
@@ -728,16 +729,15 @@ namespace BDD_Salle_de_Sport
             }
             return rep;
         }
-        static void InterfaceGestionCours(MySqlConnection Connection, string espace) // A FINIR
+        static void InterfaceGestionCours(MySqlConnection Connection, string espace) // FINI
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
             Console.WriteLine(espace + "1) Ajouter un cours.");
             Console.WriteLine(espace + "2) Supprimer un cours.");
             Console.WriteLine(espace + "3) Modifier un cours.");
-            Console.WriteLine(espace + "4) Rechercher un cours.");
-            Console.WriteLine(espace + "5) Voir la liste des cours.");
-            Console.WriteLine(espace + "6) Retour au menu précédent.");
+            Console.WriteLine(espace + "4) Voir la liste des cours.");
+            Console.WriteLine(espace + "5) Retour au menu précédent.");
             do
             {
                 Console.WriteLine("\nVotre choix : ");
@@ -751,20 +751,22 @@ namespace BDD_Salle_de_Sport
                     Console.WriteLine("Veuillez entrer un nombre valide.");
                 }
             }
-            while (rep < 0 || rep > 6);
+            while (rep < 0 || rep > 5);
             switch (rep)
             {
                 case 1: //Ajouter un cours
+                    InterfaceAjouterCours(Connection);
                     break;
                 case 2: // Supprimer un cours
+                    InterfaceSupprimerCours(Connection);
                     break;
                 case 3: // Modifier un cours
+                    InterfaceModifierCours(Connection);
                     break;
-                case 4: // Rechercher un cours
+                case 4: // Voir la liste des cours
+                    InterfaceAffichageCours(Connection);
                     break;
-                case 5: // Voir la liste des cours
-                    break;
-                case 6: // Retour au menu précédent
+                case 5: // Retour au menu précédent
                     break;
                 default:
                     Console.WriteLine("Choix invalide.");
@@ -813,7 +815,7 @@ namespace BDD_Salle_de_Sport
                     ModifierSesInfos(Connection, espace, membre);
                     break;
                 case 4: // Voir la liste des inscriptions
-                    AffichageInscription(Connection);
+                    InterfaceAffichageInscription(Connection);
                     break;
                 case 5: // Retour au menu précédent
 
@@ -825,8 +827,9 @@ namespace BDD_Salle_de_Sport
         }
         #endregion
 
-        #region Sous-sous-interfaces Admins
-        static void InterfaceAjoutMembre(MySqlConnection connection, string espace) // FINI
+        #region Sous-sous-interfaces Admins (pas fini)
+        #region Membres, Inscriptions (terminé)
+        static void InterfaceAjoutMembre(MySqlConnection connection, string espace)
         {
             Console.WriteLine("\nInscription d'un nouveau membre :\n");
             #region Saisie des informations
@@ -847,7 +850,7 @@ namespace BDD_Salle_de_Sport
 
             Console.WriteLine("Le membre a été ajouté !");
         }
-        static void AffichageInscription(MySqlConnection connection) // FINI
+        static void InterfaceAffichageInscription(MySqlConnection connection)
         {
             Console.WriteLine("=== LISTE DES INSCRIPTIONS EN COURS (ID | Nom | Prénom | Email | Téléphone | Adresse) ===");
             string sqlFutursMembres = "SELECT id_membre, nom, prenom, adresse_mail, numero_tel, adresse " +
@@ -855,6 +858,90 @@ namespace BDD_Salle_de_Sport
                                        "WHERE admis = 0";
             ExecuteQueryAfficheTout(connection, sqlFutursMembres);
         }
+        #endregion
+
+        #region Cours
+        static void InterfaceAjouterCours(MySqlConnection connection) // A FINIR
+        {
+
+        }
+        static void InterfaceSupprimerCours(MySqlConnection connection) // A tester
+        {
+            Console.WriteLine("Entrez l'ID du cours à supprimer : ");
+            int idCours = SaisirNombrePositif();
+            string sqlDelete = "DELETE FROM Cours WHERE id_cours = " + idCours;
+            ExecuteNonQuery(connection, sqlDelete);
+            Console.WriteLine("Le cours a été supprimé.");
+        }
+        static void InterfaceModifierCours(MySqlConnection connection) // A tester
+        {
+            Console.WriteLine("Entrez l'ID du cours à modifier : ");
+            int idCours = SaisirNombrePositif();
+            Console.WriteLine("Entrez le nouveau nom du cours : ");
+            string nouveauNom = SaisirString(100);
+            Console.WriteLine("Entrez la nouvelle durée en minutes : ");
+            int nouvelleDuree = SaisirNombrePositif();
+            string sqlUpdate = "UPDATE Cours SET nom = '" + nouveauNom + "', duree_minutes = " + nouvelleDuree + " WHERE id_cours = " + idCours;
+            ExecuteNonQuery(connection, sqlUpdate);
+            Console.WriteLine("Le cours a été modifié.");
+        }
+        static void InterfaceAffichageCours(MySqlConnection connection) // A tester
+        {
+            Console.WriteLine("=== LISTE DES COURS (ID | Cours | Coach | Salle | Date | Durée | Niv. | Intensité) ===");
+            string sqlCours = "SELECT C.id_cours, C.nom, Coach.nom, Salle.nom, C.horaire, " +
+                              "C.duree_minutes, C.niveau_difficulte, C.intensite " +
+                              "FROM Cours C " +
+                              "JOIN Coach ON C.id_coach = Coach.id_coach " +
+                              "JOIN Salle ON C.id_salle = Salle.id_salle ";
+            ExecuteQueryAfficheTout(connection, sqlCours);
+        }
+        #endregion
+
+        #region Coachs (à tester / vérifier)
+        static void InterfaceAjouterCoach(MySqlConnection connection) // A tester
+        {
+            Console.WriteLine("Entrez le nom du nouveau coach : ");
+            string nomCoach = SaisirString(100);
+            string sqlInsert = "INSERT INTO Coach (nom) VALUES ('" + nomCoach + "')";
+            ExecuteNonQuery(connection, sqlInsert);
+            Console.WriteLine("Le coach a été ajouté.");
+        }
+        static void InterfaceSupprimerCoach(MySqlConnection connection) // A tester
+        {
+            Console.WriteLine("Entrez l'ID du coach à supprimer : ");
+            int idCoach = SaisirNombrePositif();
+            string sqlDelete = "DELETE FROM Coach WHERE id_coach = " + idCoach;
+            ExecuteNonQuery(connection, sqlDelete);
+            Console.WriteLine("Le coach a été supprimé.");
+        }
+        static void InterfaceModifierCoach(MySqlConnection connection) // A tester
+        {
+            Console.WriteLine("Entrez l'ID du coach à modifier : ");
+            int idCoach = SaisirNombrePositif();
+            Console.WriteLine("Entrez le nouveau nom du coach : ");
+            string nouveauNom = SaisirString(100);
+            string sqlUpdate = "UPDATE Coach SET nom = '" + nouveauNom + "' WHERE id_coach = " + idCoach;
+            ExecuteNonQuery(connection, sqlUpdate);
+            Console.WriteLine("Le coach a été modifié.");
+        }
+        static void InterfaceRechercherCoach(MySqlConnection connection) // A tester
+        {
+            Console.Write("Entrez le nom du coach : ");
+            string nomRecherche = Console.ReadLine();
+            nomRecherche = nomRecherche.Replace("'", ""); //Sinon ça fait crash la requête SQL
+            string sqlRecherche = "SELECT * FROM Coach WHERE nom = '" + nomRecherche + "'";
+            Console.WriteLine($"\nVoici les informations sur {nomRecherche} :");
+            ExecuteQueryAfficheTout(connection, sqlRecherche);
+            Console.WriteLine("\nAppuyez sur une touche...");
+            Console.ReadKey();
+        }
+        static void InterfaceAffichageCoachs(MySqlConnection connection) // A tester
+        {
+            Console.WriteLine("=== LISTE DES COACHS (ID | Nom) ===");
+            string sqlCoachs = "SELECT id_coach, nom FROM Coach";
+            ExecuteQueryAfficheTout(connection, sqlCoachs);
+        }
+        #endregion
         #endregion
         #endregion
 
