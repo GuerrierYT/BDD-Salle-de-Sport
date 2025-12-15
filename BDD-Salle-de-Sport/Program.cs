@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
+using System;
 
 namespace BDD_Salle_de_Sport
 {
@@ -27,21 +23,20 @@ namespace BDD_Salle_de_Sport
             Console.Write("Password : ");
             password = Console.ReadLine();
             string connectionString = "server=localhost;user=" + login + ";database=GestionSalleSport;port=3306;password=" + password;
-            MySqlConnection connection = new MySqlConnection(connectionString)
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            try
             {
-                try
-                {
-                    connection.Open(); // Ouvre la connexion
-                    Console.WriteLine("Connection to database established successfully.");
-                    InterfaceUtilisateur(connection);
-                    return connection;
-                }
-                catch (MySqlException ex)
-                {
-                    Console.WriteLine("Error connecting to database: " + ex.Message);
-                    return null;
-                }
+                connection.Open(); // Ouvre la connexion
+                Console.WriteLine("Connection to database established successfully.");
+                InterfaceUtilisateur(connection);
+                return connection;
             }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine("Error connecting to database: " + ex.Message);
+                return null;
+            }
+
         }
         static void ExecuteQuery(MySqlConnection connection, string query)
         {
