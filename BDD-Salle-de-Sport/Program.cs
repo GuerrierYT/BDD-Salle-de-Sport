@@ -301,7 +301,7 @@ namespace BDD_Salle_de_Sport
             else
             {
                 Console.WriteLine("Créer un compte ou réessayer.");
-                InterfaceConnexionUtilisateur( connection,  login,  password, espace);
+                InterfaceConnexionUtilisateur(connection, espace);
             }
 
             return connection;
@@ -336,7 +336,7 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #region Interface
-        static void InterfaceConnexionUtilisateur(MySqlConnection connection, string login, string password, string espace)
+        static void InterfaceConnexionUtilisateur(MySqlConnection connection, string espace)
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -363,7 +363,7 @@ namespace BDD_Salle_de_Sport
                     ConnexionUtilisateur(connection, espace);
                     break;
                 case 2: // S'inscrire
-
+                    InterfaceInscriptionUtilisateur(connection, espace);
                     break;
                 case 3: // Quitter le programme
                     break;
@@ -373,6 +373,26 @@ namespace BDD_Salle_de_Sport
                     rep = -1;
                     break;
             }
+        }
+        static void InterfaceInscriptionUtilisateur(MySqlConnection connection, string espace)
+        {
+            Console.WriteLine("\nInscription d'un nouveau membre :\n");
+            Console.WriteLine(espace + "Veuillez entrer votre nom :");
+            string nom = Console.ReadLine();
+            Console.WriteLine(espace + "Veuillez entrer votre prénom :");
+            string prenom = Console.ReadLine();
+            Console.WriteLine(espace + "Veuillez entrer votre adresse e-mail :");
+            string email = Console.ReadLine();
+            Console.WriteLine(espace + "Veuillez entrer votre numéro de téléphone :");
+            string telephone = Console.ReadLine();
+            Console.WriteLine(espace + "Veuillez entrer votre adresse :");
+            string adresse = Console.ReadLine();
+            Console.WriteLine(espace + "Veuillez entrer votre mot de passe :");
+            string motDePasse = Console.ReadLine();
+            Console.WriteLine(espace + "Veuillez confirmer votre mot de passe :");
+            string confirmationMotDePasse = Console.ReadLine();
+
+            // À implémenter : Enregistrement du nouveau membre dans la base de données
         }
         #region Interfaces Admins
         static int InterfaceAdminPrincipal(MySqlConnection Connection, string espace)
@@ -680,7 +700,7 @@ namespace BDD_Salle_de_Sport
             switch (rep)
             {
 
-                case 1: //changer nom
+                case 1: //Voir mes informations
                     
                     break;
 
