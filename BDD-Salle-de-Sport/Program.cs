@@ -742,11 +742,11 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
             Console.WriteLine(espace + "1) Voir mes informations.");    //FINI
             Console.WriteLine(espace + "2) Modifier mes informations.");//FINI
-            Console.WriteLine(espace + "3) Voir les cours disponibles.");
-            Console.WriteLine(espace + "4) S'inscrire à un cours.");
-            Console.WriteLine(espace + "5) Se désinscrire d'un cours.");
-            Console.WriteLine(espace + "6) Voir ses prochains cours.");
-            Console.WriteLine(espace + "7) Voir son historique.");
+            Console.WriteLine(espace + "3) Voir les cours disponibles.");//FINI
+            Console.WriteLine(espace + "4) S'inscrire à un cours.");//FINI
+            Console.WriteLine(espace + "5) Se désinscrire d'un cours.");//FINI
+            Console.WriteLine(espace + "6) Voir ses prochains cours.");//FINI
+            Console.WriteLine(espace + "7) Voir son historique.");//FINI
             Console.WriteLine(espace + "8) Quitter le programme.");
             bool termine = false;
             do
@@ -779,14 +779,16 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 3: // Voir les cours disponibles
-                    Console.WriteLine("--- LISTE DES COURS ---");
-                    string sqlAfficher = "SELECT C.id_cours, C.nom, Coach.nom, Salle.nom, C.horaire " +
+                    Console.WriteLine("--- LISTE DES COURS (ID | Cours | Coach | Salle | Date | Durée | Niv. | Intensité) ---");
+
+                    // On ajoute C.duree_minutes, C.niveau_difficulte, C.intensite à la liste
+                    string sqlAfficher = "SELECT C.id_cours, C.nom, Coach.nom, Salle.nom, C.horaire, " +
+                                         "C.duree_minutes, C.niveau_difficulte, C.intensite " +
                                          "FROM Cours C " +
                                          "JOIN Coach ON C.id_coach = Coach.id_coach " +
                                          "JOIN Salle ON C.id_salle = Salle.id_salle " +
                                          "WHERE C.horaire > NOW()";
 
-                    // On utilise ta fonction existante pour afficher
                     ExecuteQueryAfficheTout(Connection, sqlAfficher);
 
                     Console.WriteLine("\nAppuyez sur une touche...");
@@ -797,27 +799,53 @@ namespace BDD_Salle_de_Sport
                     Console.WriteLine("Entrez l'ID du cours : ");
                     string idCours = Console.ReadLine();
 
-                    string sqlVerif = "SELECT COUNT(*) FROM Reservations WHERE id_membre=" + membre.Id + " AND id_cours=" + idCours;
-                    int dejaInscrit = ExecuteQueryInt(Connection, sqlVerif);
+                    // 1. On vérifie d'abord si ce cours existe et on récupère sa CAPACITÉ MAX
+                    string sqlCapacite = "SELECT capacite_cours FROM Cours WHERE id_cours=" + idCours;
+                    int capaciteMax = ExecuteQueryInt(Connection, sqlCapacite);
 
-                    if (dejaInscrit > 0)
+                    if (capaciteMax == -1) // Si ExecuteQueryInt retourne -1 ou 0 (selon ta fonction), le cours n'existe pas
                     {
-                        Console.WriteLine("Vous êtes déjà inscrit !");
+                        Console.WriteLine("Ce numéro de cours n'existe pas.");
                     }
                     else
                     {
-                        string sqlInscription = "INSERT INTO Reservations (id_membre, id_cours) VALUES (" + membre.Id + ", " + idCours + ")";
-                        try
+                        // 2. On compte combien de gens sont DÉJÀ inscrits
+                        string sqlCompte = "SELECT COUNT(*) FROM Reservations WHERE id_cours=" + idCours;
+                        int nbInscrits = ExecuteQueryInt(Connection, sqlCompte);
+
+                        // 3. On vérifie si TU es déjà inscrit
+                        string sqlVerifMoi = "SELECT COUNT(*) FROM Reservations WHERE id_membre=" + membre.Id + " AND id_cours=" + idCours;
+                        int dejaInscrit = ExecuteQueryInt(Connection, sqlVerifMoi);
+
+                        // --- VERDICTS ---
+
+                        if (dejaInscrit > 0)
                         {
-                            MySqlCommand cmd = new MySqlCommand(sqlInscription, Connection);
-                            cmd.ExecuteNonQuery();
-                            Console.WriteLine("Inscription validée !");
+                            Console.WriteLine("Vous êtes déjà inscrit à ce cours !");
                         }
-                        catch
+                        else if (nbInscrits >= capaciteMax)
                         {
-                            Console.WriteLine("Erreur (ID cours invalide ?)");
+                            // C'EST ICI LA NOUVELLE VÉRIFICATION
+                            Console.WriteLine($"Désolé, le cours est complet ! ({nbInscrits}/{capaciteMax} places prises)");
+                        }
+                        else
+                        {
+                            // TOUT EST BON : On inscrit !
+                            string sqlInscription = "INSERT INTO Reservations (id_membre, id_cours) VALUES (" + membre.Id + ", " + idCours + ")";
+
+                            try
+                            {
+                                MySqlCommand cmd = new MySqlCommand(sqlInscription, Connection);
+                                cmd.ExecuteNonQuery();
+                                Console.WriteLine("Inscription validée avec succès !");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Erreur technique : " + ex.Message);
+                            }
                         }
                     }
+                    Console.WriteLine("\nAppuyez sur une touche...");
                     Console.ReadKey();
                     break;
 
@@ -841,6 +869,8 @@ namespace BDD_Salle_de_Sport
                     }
                     Console.ReadKey();
                     break;
+
+                case 6:
                     Console.WriteLine("=== MES PROCHAINS COURS (Date | Cours | Coach | Salle) ===");
 
                     // On sélectionne la date, le nom du cours, le coach et la salle
@@ -857,6 +887,7 @@ namespace BDD_Salle_de_Sport
 
                     Console.WriteLine("\nAppuyez sur une touche pour revenir au menu...");
                     Console.ReadKey();
+                    break;
 
                 case 7: // Voir son historique
                     Console.WriteLine("=== MON HISTORIQUE (Date | Cours | Coach | Salle) ===");
