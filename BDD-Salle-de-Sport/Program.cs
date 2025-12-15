@@ -139,7 +139,7 @@ namespace BDD_Salle_de_Sport
             }
         }
         */
-
+        #region Connexions Membres/Admins
         static MySqlConnection ConnecterEnTantQueMembre()
         {
             // On utilise le login restreint "membre_client"
@@ -161,5 +161,36 @@ namespace BDD_Salle_de_Sport
                 return null; // Retourne null si ça a échoué
             }
         }
+
+        public static MySqlConnection ConnecterEnTantQueAdmin(bool estPrincipal)
+        {
+            string connectionString = "";
+
+            if (estPrincipal)
+            {
+                // Connexion "Dieu" pour Thibault
+                connectionString = "server=localhost;user=admin_principal;database=GestionSalleSport;port=3306;password=MotDePasseFort1!";
+            }
+            else
+            {
+                // Connexion limitée pour Chris
+                connectionString = "server=localhost;user=admin_app;database=GestionSalleSport;port=3306;password=MotDePasseApp2!";
+            }
+
+            MySqlConnection connection = new MySqlConnection(connectionString);
+
+            try
+            {
+                connection.Open();
+                Console.WriteLine(estPrincipal ? ">> Mode Admin PRINCIPAL activé." : ">> Mode Admin SECONDAIRE activé.");
+                return connection;
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine("Erreur de connexion Admin : " + ex.Message);
+                return null;
+            }
+        }
+        #endregion
     }
 }
