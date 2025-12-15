@@ -149,7 +149,7 @@ namespace BDD_Salle_de_Sport
         */
 
         #region Interface
-        static int InterfaceAdminPrincipal()
+        static int InterfaceAdminPrincipal(MySqlConnection Connection)
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -202,7 +202,7 @@ namespace BDD_Salle_de_Sport
             return rep;
         }
 
-        static int InterfaceAdminSecondaire()
+        static int InterfaceAdminSecondaire(MySqlConnection Connection)
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -251,7 +251,6 @@ namespace BDD_Salle_de_Sport
             return rep;
         }
         #endregion
-
 
         #region Connexions Membres/Admins
         static MySqlConnection ConnecterEnTantQueMembre()
