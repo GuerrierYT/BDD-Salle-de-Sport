@@ -10,13 +10,9 @@ namespace BDD_Salle_de_Sport
         {
             string espace = "                                        ";
             MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données en tant que root
-            // Objet membre pour stocker les infos du membre connecté
             connection = ConnexionUtilisateur(connection, espace); // Gère la connexion utilisateur (admin/membre)
 
-            if (connection != null) // Vérifie si la connexion a été établie avant de la fermer
-            {
-                connection.Close();
-            }
+            FermetureConnexionUtilisateur(connection);
             Console.ReadKey();
         }
         static MySqlConnection ConnectToDatabase() // Connexion en tant que root pour vérifier les identifiants
@@ -285,7 +281,7 @@ namespace BDD_Salle_de_Sport
 
         #endregion
 
-        #region Gestion Connexion Utilisateur
+        #region Gestion Connexion Utilisateur (terminé)
         static bool UtilisateurEstAdmin(MySqlConnection connection, string login, string password) // Vérifie si l'utilisateur est un admin
         {
             return ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Administrateur WHERE login = '{login}' AND password = '{password}'") > 0;
@@ -325,19 +321,13 @@ namespace BDD_Salle_de_Sport
             if (UtilisateurEstAdmin(connection, login, password))
             {
                 bool estPrincipal = UtilisateurEstAdminPrincipal(connection, login, password);
-                if (connection != null) // On ferme la connexion root
-                {
-                    connection.Close();
-                }
+                FermetureConnexionUtilisateur(connection);
                 connection = ConnecterEnTantQueAdmin(estPrincipal);
                 Console.WriteLine("Bienvenue Administrateur !");
             }
             else if (UtilisateurEstMembre(connection, login, password))
             {
-                if (connection != null) // On ferme la connexion root
-                {
-                    connection.Close();
-                }
+                FermetureConnexionUtilisateur(connection);
                 Membre membre = new Membre();
                 connection = ConnecterEnTantQueMembre();
                 RemplirInfosMembre(connection, login, membre);
@@ -348,7 +338,6 @@ namespace BDD_Salle_de_Sport
                 {
                     stop = InterfaceMembre(connection, espace, membre);
                 }
-
             }
             else
             {
@@ -358,9 +347,14 @@ namespace BDD_Salle_de_Sport
 
             return connection;
         }
-
-        // Fonction outil pour récupérer les infos
-        static void RemplirInfosMembre(MySqlConnection connection, string login, Membre membreAremplir)
+        static void FermetureConnexionUtilisateur(MySqlConnection connection)
+        {
+            if (connection != null)
+            {
+                connection.Close();
+            }
+        }
+        static void RemplirInfosMembre(MySqlConnection connection, string login, Membre membreAremplir) // Fonction outil pour récupérer les infos
         {
             string query = "SELECT * FROM Membre WHERE adresse_mail = @login";
 
