@@ -1,9 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BDD_Salle_de_Sport
 {
@@ -13,8 +9,8 @@ namespace BDD_Salle_de_Sport
         static void Main(string[] args)
         {
             MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données
-            ConnexionUtilisateur(connection);
-            //InterfaceUtilisateur(connection);
+            connection = ConnexionUtilisateur(connection);
+
 
 
             if (connection != null) // Vérifie si la connexion a été établie avant de la fermer
@@ -86,7 +82,7 @@ namespace BDD_Salle_de_Sport
         {
             return ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Membre WHERE adresse_mail = '{login}' AND mot_de_passe = '{password}'") > 0;
         }
-        static void ConnexionUtilisateur(MySqlConnection connection)
+        static MySqlConnection ConnexionUtilisateur(MySqlConnection connection)
         {
             string login = "";
             string password = "";
@@ -96,11 +92,21 @@ namespace BDD_Salle_de_Sport
             password = Console.ReadLine();
             if (UtilisateurEstAdmin(connection, login, password))
             {
+                if (connection != null) // On ferme la connexion root
+                {
+                    connection.Close();
+                }
+                //connection = ConnecterEnTantQueAdministrateur();
                 Console.WriteLine("Bienvenue Administrateur !");
                 InterfaceUtilisateur(connection);
             }
             else if (UtilisateurEstMembre(connection, login, password))
             {
+                if (connection != null) // On ferme la connexion root
+                {
+                    connection.Close();
+                }
+                connection = ConnecterEnTantQueMembre();
                 Console.WriteLine("Bienvenue Membre !");
                 InterfaceUtilisateur(connection);
             }
@@ -109,6 +115,8 @@ namespace BDD_Salle_de_Sport
                 Console.WriteLine("Compte inexistant.");
                 Console.WriteLine("Créer un compte ou réessayer.");
             }
+
+            return connection;
         }
         static void InterfaceUtilisateur(MySqlConnection connection)
         {
