@@ -127,7 +127,22 @@ namespace BDD_Salle_de_Sport
         }
         static bool UtilisateurEstMembre(MySqlConnection connection, string login, string password) // Vérifie si l'utilisateur est un membre
         {
-            return ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Membre WHERE adresse_mail = '{login}' AND mot_de_passe = '{password}'") > 0;
+            if (ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Membre WHERE adresse_mail = '{login}' AND mot_de_passe = '{password}'") > 0)
+            {
+                if (ExecuteQueryBool(connection, $"SELECT admis FROM Membre WHERE adresse_mail = '{login}' AND mot_de_passe = '{password}'"))
+                {
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Votre compte n'a pas encore été admis par un administrateur.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Compte non trouvé !");
+            }
+            return false;
         }
         static bool UtilisateurEstAdminPrincipal(MySqlConnection connection, string login, string password) // Vérifie si l'admin est principal
         {
@@ -165,7 +180,6 @@ namespace BDD_Salle_de_Sport
             }
             else
             {
-                Console.WriteLine("Compte inexistant.");
                 Console.WriteLine("Créer un compte ou réessayer.");
             }
 
