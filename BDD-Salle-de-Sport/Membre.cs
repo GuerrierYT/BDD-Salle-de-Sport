@@ -8,22 +8,21 @@ namespace BDD_Salle_de_Sport
 {
     public class Membre
     {
+        // Attributs et propriétés
         public int Id { get; set; }
         public string Nom { get; set; }
         public string Prenom { get; set; }
         public string Adresse { get; set; }
         public string Telephone { get; set; }
-        public string Email { get; set; }      // Correspond à adresse_mail
+        public string Email { get; set; }
         public string MotDePasse { get; set; }
         public DateTime DateInscription { get; set; }
-        public bool Admis { get; set; }        // True = Validé, False = En attente
-
+        public bool Admis { get; set; }
         public string NomComplet => $"{Prenom} {Nom}";
 
-        // Constructeur vide (nécessaire pour la lecture BDD)
+        // Constructeurs
         public Membre()
         {
-            this.Id = 0;
             this.Nom = null;
             this.Prenom = null;
             this.Adresse = null;
@@ -33,8 +32,6 @@ namespace BDD_Salle_de_Sport
             this.DateInscription = DateTime.Now;
             this.Admis = false;
         }
-
-        // Constructeur pour faciliter l'inscription
         public Membre(string nom, string prenom, string email, string mdp)
         {
             Nom = nom;
@@ -44,8 +41,20 @@ namespace BDD_Salle_de_Sport
             Admis = false; // Par défaut, un nouveau membre n'est pas encore validé par l'admin
             DateInscription = DateTime.Now;
         }
+        public Membre(string nom, string prenom, string adresse, string telephone, string email, string mdp)
+        {
+            Nom = nom;
+            Prenom = prenom;
+            Adresse = adresse;
+            Telephone = telephone;
+            Email = email;
+            MotDePasse = mdp;
+            DateInscription = DateTime.Now;
+            Admis = false;
+            // A implémenter : l'enregistrer dans la BDD
+        }
 
-        
+        // Méthodes
         public override string ToString()
         {
             return $"[{Id}] {NomComplet} - {Email} (Statut: {(Admis ? "Validé" : "En attente")})";
