@@ -498,6 +498,7 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #region Interface (pas fini)
+
         #region Interface Utilisateur (terminé)
         static void InterfaceConnexionUtilisateur(MySqlConnection connection, string espace)
         {
@@ -561,6 +562,7 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #region Interfaces Admins (pas fini)
+
         #region Interfaces principales Admins (terminé)
         static bool InterfaceAdminPrincipal(MySqlConnection Connection, string espace) // FINI
         {
@@ -717,7 +719,7 @@ namespace BDD_Salle_de_Sport
                     mailRecherche = mailRecherche.Replace("'", ""); //Sinon ça fait crash la requête SQL
                     string sqlRecherche = "SELECT * FROM Membre WHERE adresse_mail = '" + mailRecherche + "'";
                     Console.WriteLine($"\nVoici les informations sur {mailRecherche} :");
-                    ExecuteQueryAfficheTout(Connection, sqlRecherche);
+                    ExecuteQueryAfficheToutAuto(Connection, sqlRecherche);
 
                     Console.WriteLine("\nAppuyez sur une touche...");
                     Console.ReadKey();
@@ -730,7 +732,7 @@ namespace BDD_Salle_de_Sport
                                         "FROM Membre " +
                                         "WHERE admis = 1";
 
-                    ExecuteQueryAfficheTout(Connection, sqlMembres);
+                    ExecuteQueryAfficheToutAuto(Connection, sqlMembres);
 
                     Console.WriteLine("\nAppuyez sur une touche...");
                     Console.ReadKey();
@@ -900,6 +902,7 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #region Sous-sous-interfaces Admins (pas fini)
+
         #region Membres, Inscriptions (terminé)
         static void InterfaceAjoutMembre(MySqlConnection connection, string espace)
         {
@@ -928,7 +931,7 @@ namespace BDD_Salle_de_Sport
             string sqlFutursMembres = "SELECT id_membre, nom, prenom, adresse_mail, numero_tel, adresse " +
                                        "FROM Membre " +
                                        "WHERE admis = 0";
-            ExecuteQueryAfficheTout(connection, sqlFutursMembres);
+            ExecuteQueryAfficheToutAuto(connection, sqlFutursMembres);
         }
         #endregion
 
@@ -1003,7 +1006,7 @@ namespace BDD_Salle_de_Sport
             nomRecherche = nomRecherche.Replace("'", ""); //Sinon ça fait crash la requête SQL
             string sqlRecherche = "SELECT * FROM Coach WHERE nom = '" + nomRecherche + "'";
             Console.WriteLine($"\nVoici les informations sur {nomRecherche} :");
-            ExecuteQueryAfficheTout(connection, sqlRecherche);
+            ExecuteQueryAfficheToutAuto(connection, sqlRecherche);
             Console.WriteLine("\nAppuyez sur une touche...");
             Console.ReadKey();
         }
@@ -1011,7 +1014,7 @@ namespace BDD_Salle_de_Sport
         {
             Console.WriteLine("=== LISTE DES COACHS (ID | Nom) ===");
             string sqlCoachs = "SELECT id_coach, nom FROM Coach";
-            ExecuteQueryAfficheTout(connection, sqlCoachs);
+            ExecuteQueryAfficheToutAuto(connection, sqlCoachs);
         }
         #endregion
         #endregion
@@ -1071,7 +1074,7 @@ namespace BDD_Salle_de_Sport
                                          "JOIN Salle ON C.id_salle = Salle.id_salle " +
                                          "WHERE C.horaire > NOW()";
 
-                    ExecuteQueryAfficheTout(Connection, sqlAfficher);
+                    ExecuteQueryAfficheToutAuto(Connection, sqlAfficher);
 
                     Console.WriteLine("\nAppuyez sur une touche...");
                     Console.ReadKey();
@@ -1165,7 +1168,7 @@ namespace BDD_Salle_de_Sport
                                       "WHERE R.id_membre = " + membre.Id + " AND C.horaire > NOW() " +
                                       "ORDER BY C.horaire ASC"; // Du plus proche au plus lointain
 
-                    ExecuteQueryAfficheTout(Connection, sqlFutur);
+                    ExecuteQueryAfficheToutAuto(Connection, sqlFutur);
 
                     Console.WriteLine("\nAppuyez sur une touche pour revenir au menu...");
                     Console.ReadKey();
@@ -1183,7 +1186,7 @@ namespace BDD_Salle_de_Sport
                                       "WHERE R.id_membre = " + membre.Id + " AND C.horaire <= NOW() " +
                                       "ORDER BY C.horaire DESC"; // Du plus récent au plus vieux
 
-                    ExecuteQueryAfficheTout(Connection, sqlPasse);
+                    ExecuteQueryAfficheToutAuto(Connection, sqlPasse);
 
                     Console.WriteLine("\nAppuyez sur une touche pour revenir au menu...");
                     Console.ReadKey();
