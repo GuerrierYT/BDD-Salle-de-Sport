@@ -600,6 +600,23 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 4: // Rechercher un membre
+                    Console.WriteLine("=== RECHERCHE PAR EMAIL ===");
+                    Console.Write("Entrez l'email du membre : ");
+                    string mailRecherche = Console.ReadLine();
+
+                    // On protège juste l'apostrophe pour éviter le crash SQL
+                    mailRecherche = mailRecherche.Replace("'", "''");
+
+                    // La requête demandée
+                    string sqlRecherche = "SELECT * FROM Membre WHERE adresse_mail = '" + mailRecherche + "'";
+
+                    Console.WriteLine("\n--- RÉSULTAT ---");
+                    // Si l'email existe, ça affiche la ligne. Sinon, ça n'affiche rien.
+                    ExecuteQueryAfficheTout(Connection, sqlRecherche);
+
+                    Console.WriteLine("\nAppuyez sur une touche...");
+                    Console.ReadKey();
+                    break;
                     break;
 
                 case 5: // Voir la liste des membres
@@ -1207,7 +1224,7 @@ namespace BDD_Salle_de_Sport
             return tel;
         }
 
-        int SaisirNombrePositif()
+        static int SaisirNombrePositif()
         {
             int rep = -1;
             do
