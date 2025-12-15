@@ -46,6 +46,7 @@ namespace BDD_Salle_de_Sport
             DateInscription = DateTime.Now;
         }
 
+
         public override string ToString()
         {
             return $"[{Id}] {NomComplet} - {Email} (Statut: {(Admis ? "Validé" : "En attente")})";
