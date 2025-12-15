@@ -398,9 +398,34 @@ namespace BDD_Salle_de_Sport
                 }
             }
         }
+        static void RemplirInfosInscription(MySqlConnection connection, string login, Membre membreAremplir) // Fonction outil pour récupérer les infos
+        {
+            string query = "SELECT * FROM Membre WHERE adresse_mail = @login";
+
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@login", login);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        membreAremplir.Id = Convert.ToInt32(reader["id_membre"]);
+                        membreAremplir.Nom = reader["nom"].ToString();
+                        membreAremplir.Prenom = reader["prenom"].ToString();
+                        membreAremplir.Email = reader["adresse_mail"].ToString();
+                        membreAremplir.MotDePasse = reader["mot_de_passe"].ToString();
+                        membreAremplir.Adresse = reader["adresse"].ToString();
+                        membreAremplir.Telephone = reader["numero_tel"].ToString();
+                        membreAremplir.DateInscription = Convert.ToDateTime(reader["date_inscription"]);
+                    }
+                }
+            }
+        }
         #endregion
 
         #region Interface
+        #region Interface Utilisateur
         static void InterfaceConnexionUtilisateur(MySqlConnection connection, string espace)
         {
             int rep = 0;
@@ -460,6 +485,8 @@ namespace BDD_Salle_de_Sport
 
             Console.WriteLine("Votre demande d'inscription a été envoyée. Veuillez attendre qu'un administrateur valide votre compte.");
         }
+        #endregion
+
         #region Interfaces Admins
         static bool InterfaceAdminPrincipal(MySqlConnection Connection, string espace)
         {
@@ -775,10 +802,17 @@ namespace BDD_Salle_de_Sport
                     SupprimerMembre(Connection, id);
                     break;
                 case 3: // Modifier une inscription
+                    Console.WriteLine("Entrez l'adresse e-mail du membre à modifier : ");
+                    string login = Console.ReadLine();
+                    Membre membre = new Membre();
+                    RemplirInfosInscription(Connection, login, membre);
+                    ModifierSesInfos(Connection, espace, membre);
                     break;
                 case 4: // Voir la liste des inscriptions
+
                     break;
                 case 5: // Retour au menu précédent
+
                     break;
                 default:
                     Console.WriteLine("Choix invalide.");
