@@ -34,7 +34,10 @@ namespace BDD_Salle_de_Sport
                 return null;
             }
         }
+
         #region Requêtes SQL
+
+        #region Exécution requêtes
         static void ExecuteQuery(MySqlConnection connection, string query) // Pour les requêtes qui retournent plusieurs lignes
         {
             using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -118,6 +121,23 @@ namespace BDD_Salle_de_Sport
                 }
             }
         }
+        static void ExecuteNonQuery(MySqlConnection connection, string query) // Pour les requêtes qui ne retournent rien (INSERT, UPDATE, DELETE)
+        {
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine("Error executing non-query: " + ex.Message);
+                }
+            }
+        }
+        #endregion
+
+
 
         #region Changement attributs membre
         static bool UpdatePrenomSimple(MySqlConnection connection, int idMembre, string nouveauPrenom)
@@ -236,6 +256,7 @@ namespace BDD_Salle_de_Sport
         }
 
         #endregion
+
         #endregion
 
         #region Gestion Connexion Utilisateur
@@ -377,6 +398,7 @@ namespace BDD_Salle_de_Sport
         static void InterfaceInscriptionUtilisateur(MySqlConnection connection, string espace)
         {
             Console.WriteLine("\nInscription d'un nouveau membre :\n");
+            #region Saisie des informations
             Console.WriteLine(espace + "Veuillez entrer votre nom :");
             string nom = Console.ReadLine();
             Console.WriteLine(espace + "Veuillez entrer votre prénom :");
@@ -388,8 +410,9 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine(espace + "Veuillez entrer votre adresse :");
             string adresse = Console.ReadLine();
             string motDePasse = SaisirMotdePasse(espace);
-
-            // Créer le membre
+            #endregion
+            ExecuteNonQuery(connection, "INSERT INTO Membre (nom, prenom, adresse, numero_tel, adresse_mail, mot_de_passe) " + // Ajout du nouveau membre dans la BDD
+                "VALUES ('" + nom + "', '" + prenom + "', '" + adresse + "', '" + telephone + "', '" + email + "', '" + motDePasse + "');");
 
             Console.WriteLine("Votre demande d'inscription a été envoyée. Veuillez attendre qu'un administrateur valide votre compte.");
         }
@@ -859,7 +882,7 @@ namespace BDD_Salle_de_Sport
             }
             while (motDePasse != confirmationMotDePasse && motDePasse.Length <= 50);
             return motDePasse;
-        } // 
+        }
         #endregion
     }
 }
