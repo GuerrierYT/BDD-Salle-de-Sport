@@ -33,11 +33,7 @@ namespace BDD_Salle_de_Sport
                 Console.WriteLine("Error connecting to database: " + ex.Message);
                 return null;
             }
-
         }
-
-
-
         static void ExecuteQuery(MySqlConnection connection, string query)
         {
             using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -95,7 +91,6 @@ namespace BDD_Salle_de_Sport
                 Console.WriteLine("Error connecting to database: " + ex.Message);
                 return null;
             }
-
         }
         */
 
