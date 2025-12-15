@@ -138,8 +138,6 @@ namespace BDD_Salle_de_Sport
         }
         #endregion
 
-
-
         #region Changement attributs membre
         static bool UpdatePrenomSimple(MySqlConnection connection, int idMembre, string nouveauPrenom)
         {
