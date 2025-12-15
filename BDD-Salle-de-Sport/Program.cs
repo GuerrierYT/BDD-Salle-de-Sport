@@ -9,7 +9,7 @@ namespace BDD_Salle_de_Sport
         {
             string espace = "                                        ";
             MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données
-            Membre membre = new Membre()
+            Membre membre = new Membre();
             connection = ConnexionUtilisateur(connection, ref membre); // Gère la connexion utilisateur (admin/membre)
 
             if (connection != null) // Vérifie si la connexion a été établie avant de la fermer
