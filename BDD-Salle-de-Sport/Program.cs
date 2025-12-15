@@ -361,7 +361,7 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine(espace + "3) Voir les cours disponibles.");
             Console.WriteLine(espace + "4) S'inscrire à un cours.");
             Console.WriteLine(espace + "5) Se désinscrire d'un cours.");
-            Console.WriteLine(espace + "6) Voir son historique.")
+            Console.WriteLine(espace + "6) Voir son historique.");
             Console.WriteLine(espace + "7) Quitter le programme.");
 
             do
