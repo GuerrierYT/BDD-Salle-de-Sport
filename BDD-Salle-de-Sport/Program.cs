@@ -11,7 +11,7 @@ namespace BDD_Salle_de_Sport
 
             MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données en tant que root
             Membre membre = new Membre(); // Objet membre pour stocker les infos du membre connecté
-            connection = ConnexionUtilisateur(connection, ref membre); // Gère la connexion utilisateur (admin/membre)
+            connection = ConnexionUtilisateur(connection, ref membre, espace); // Gère la connexion utilisateur (admin/membre)
 
             if (connection != null) // Vérifie si la connexion a été établie avant de la fermer
             {
@@ -137,6 +137,7 @@ namespace BDD_Salle_de_Sport
                 else
                 {
                     Console.WriteLine("Votre compte n'a pas encore été admis par un administrateur.");
+                    Console.WriteLine("Veuillez attendre qu'un administrateur accepte votre demande.");
                 }
             }
             else
@@ -149,7 +150,7 @@ namespace BDD_Salle_de_Sport
         {
             return ExecuteQueryString(connection, $"SELECT role FROM Administrateur WHERE login = '{login}' AND password = '{password}'") == "Principal";
         }
-        static MySqlConnection ConnexionUtilisateur(MySqlConnection connection, ref Membre membre) // Gère la connexion utilisateur
+        static MySqlConnection ConnexionUtilisateur(MySqlConnection connection, ref Membre membre, string espace) // Gère la connexion utilisateur
         {
             string login = "";
             string password = "";
@@ -182,7 +183,7 @@ namespace BDD_Salle_de_Sport
             else
             {
                 Console.WriteLine("Créer un compte ou réessayer.");
-
+                InterfaceConnexionUtilisateur( connection,  login,  password, espace, membre);
             }
 
             return connection;
@@ -217,12 +218,12 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #region Interface
-        static void InterfaceConnexionUtilisateur(MySqlConnection connection, string login, string password, string espace)
+        static void InterfaceConnexionUtilisateur(MySqlConnection connection, string login, string password, string espace, Membre membre)
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
-            Console.WriteLine(espace + "1) Réessayer de vous connecter.");
-            Console.WriteLine(espace + "2) Vous inscrire.");
+            Console.WriteLine(espace + "1) Réessayer de se connecter.");
+            Console.WriteLine(espace + "2) S'inscrire.");
             Console.WriteLine(espace + "3) Quitter le programme.");
             do
             {
@@ -237,25 +238,16 @@ namespace BDD_Salle_de_Sport
                     Console.WriteLine("Veuillez entrer un nombre valide.");
                 }
             }
-            while (rep < 0 || rep > 6);
+            while (rep < 0 || rep > 3);
             switch (rep)
             {
-                case 1: //Gérer les membres*
-                    
+                case 1: // Réessayer de se connecter
+                    ConnexionUtilisateur(connection,ref membre, espace);
                     break;
-                case 2: // Gérer les coachs
-                    
-                    break;
-                case 3: // Gérer les cours
-                    break;
+                case 2: // S'inscrire
 
-                case 4: // Gérer les inscriptions
                     break;
-
-                case 5: // Quitter le jeu
-                    break;
-
-                case 6: // Quitter le jeu
+                case 3: // Quitter le programme
                     break;
 
                 default:
