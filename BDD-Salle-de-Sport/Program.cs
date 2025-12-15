@@ -136,6 +136,33 @@ namespace BDD_Salle_de_Sport
                 }
             }
         }
+
+        static void ExecuteQueryAfficheTout(MySqlConnection connection, string query) 
+        {
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                try
+                {
+                    MySqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        string ligne = "";
+                        // On boucle sur toutes les colonnes de la ligne trouvée
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            ligne += reader[i].ToString() + " | "; // On sépare par un trait
+                        }
+                        Console.WriteLine(ligne);
+                    }
+                    reader.Close();
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine("Erreur : " + ex.Message);
+                }
+            }
+        } //Pour les requêtes qui retournent plusieurs lignes et colonnes
+
         #endregion
 
         #region Changement attributs membre
@@ -319,7 +346,7 @@ namespace BDD_Salle_de_Sport
                 bool stop = false;
                 while (!stop)
                 {
-                    InterfaceMembre(connection, espace, membre);
+                    stop = InterfaceMembre(connection, espace, membre);
                 }
 
             }
@@ -724,8 +751,9 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine(espace + "3) Voir les cours disponibles.");
             Console.WriteLine(espace + "4) S'inscrire à un cours.");
             Console.WriteLine(espace + "5) Se désinscrire d'un cours.");
-            Console.WriteLine(espace + "6) Voir son historique.");
-            Console.WriteLine(espace + "7) Quitter le programme.");
+            Console.WriteLine(espace + "6) Voir ses prochains cours.");
+            Console.WriteLine(espace + "7) Voir son historique.");
+            Console.WriteLine(espace + "8) Quitter le programme.");
             bool termine = false;
             do
             {
@@ -740,7 +768,7 @@ namespace BDD_Salle_de_Sport
                     Console.WriteLine("Veuillez entrer un nombre valide.");
                 }
             }
-            while (rep < 0 || rep > 7);
+            while (rep < 0 || rep > 8);
             switch (rep)
             {
 
@@ -765,7 +793,7 @@ namespace BDD_Salle_de_Sport
                                          "WHERE C.horaire > NOW()";
 
                     // On utilise ta fonction existante pour afficher
-                    ExecuteQuery(Connection, sqlAfficher);
+                    ExecuteQueryAfficheTout(Connection, sqlAfficher);
 
                     Console.WriteLine("\nAppuyez sur une touche...");
                     Console.ReadKey();
@@ -819,11 +847,42 @@ namespace BDD_Salle_de_Sport
                     }
                     Console.ReadKey();
                     break;
+                    Console.WriteLine("=== MES PROCHAINS COURS (Date | Cours | Coach | Salle) ===");
 
-                case 6: // Voir son historique
+                    // On sélectionne la date, le nom du cours, le coach et la salle
+                    // On filtre sur MON id (m.Id) ET sur la date future
+                    string sqlFutur = "SELECT C.horaire, C.nom, Coach.nom, Salle.nom " +
+                                      "FROM Reservations R " +
+                                      "JOIN Cours C ON R.id_cours = C.id_cours " +
+                                      "JOIN Coach ON C.id_coach = Coach.id_coach " +
+                                      "JOIN Salle ON C.id_salle = Salle.id_salle " +
+                                      "WHERE R.id_membre = " + membre.Id + " AND C.horaire > NOW() " +
+                                      "ORDER BY C.horaire ASC"; // Du plus proche au plus lointain
+
+                    ExecuteQueryAfficheTout(Connection, sqlFutur);
+
+                    Console.WriteLine("\nAppuyez sur une touche pour revenir au menu...");
+                    Console.ReadKey();
+
+                case 7: // Voir son historique
+                    Console.WriteLine("=== MON HISTORIQUE (Date | Cours | Coach | Salle) ===");
+
+                    // Même requête, mais on change le filtre de date (<= NOW())
+                    string sqlPasse = "SELECT C.horaire, C.nom, Coach.nom, Salle.nom " +
+                                      "FROM Reservations R " +
+                                      "JOIN Cours C ON R.id_cours = C.id_cours " +
+                                      "JOIN Coach ON C.id_coach = Coach.id_coach " +
+                                      "JOIN Salle ON C.id_salle = Salle.id_salle " +
+                                      "WHERE R.id_membre = " + membre.Id + " AND C.horaire <= NOW() " +
+                                      "ORDER BY C.horaire DESC"; // Du plus récent au plus vieux
+
+                    ExecuteQueryAfficheTout(Connection, sqlPasse);
+
+                    Console.WriteLine("\nAppuyez sur une touche pour revenir au menu...");
+                    Console.ReadKey();
                     break;
 
-                case 7: // Quitter le programme
+                case 8: // Quitter le programme
                     termine = true;
                     break;
 
