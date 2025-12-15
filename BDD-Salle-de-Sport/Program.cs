@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Diagnostics;
 
 namespace BDD_Salle_de_Sport
 {
@@ -693,16 +694,17 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #endregion
+
         static void ModifierSesInfos(MySqlConnection connection, string espace, Membre membre)
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous modifier ?\n");
-            Console.WriteLine(espace + "1) Votre nom.");
-            Console.WriteLine(espace + "2) Votre prénom.");
-            Console.WriteLine(espace + "3) Votre adresse.");
-            Console.WriteLine(espace + "4) Votre numéro de téléphone.");
-            Console.WriteLine(espace + "5) Votre adresse mail");
-            Console.WriteLine(espace + "6) Votre mot de passe.");
+            Console.WriteLine(espace + "1) Le nom.");
+            Console.WriteLine(espace + "2) Le prénom.");
+            Console.WriteLine(espace + "3) L'adresse.");
+            Console.WriteLine(espace + "4) Le numéro de téléphone.");
+            Console.WriteLine(espace + "5) L'adresse mail");
+            Console.WriteLine(espace + "6) Le mot de passe.");
             Console.WriteLine(espace + "7) Aucune information.");
 
             do
@@ -722,23 +724,96 @@ namespace BDD_Salle_de_Sport
             switch (rep)
             {
 
-                case 1: //Voir mes informations
-
+                case 1: //changer nom
+                    Console.WriteLine(espace + "Veuillez entrer votre nouveau nom :");
+                    string nouveauNom = SaisirString(50);
+                    if (UpdateNomSimple(connection, membre.Id, nouveauNom))
+                    {
+                        membre.Nom = nouveauNom;
+                        Console.WriteLine("Nom mis à jour avec succès.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Échec de la mise à jour du nom.");
+                    }
                     break;
 
                 case 2: //changer prenom
+                    Console.WriteLine(espace + "Veuillez entrer votre nouveau prénom :");
+                    string nouveauPrenom = SaisirString(50);
+                    if (UpdatePrenomSimple(connection, membre.Id, nouveauPrenom))
+                    {
+                        membre.Prenom = nouveauPrenom;
+                        Console.WriteLine("Prénom mis à jour avec succès.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Échec de la mise à jour du prénom.");
+                    }
                     break;
 
-                case 3: // changer Adresse
+                case 3: // changer
+                    Console.WriteLine(espace + "Veuillez entrer votre nouvelle adresse :");
+                    string nouvelleAdresse = Console.ReadLine();
+                    if (UpdateAdresseSimple(connection, membre.Id, nouvelleAdresse))
+                    {
+                        membre.Adresse = nouvelleAdresse;
+                        Console.WriteLine("Adresse mise à jour avec succès.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Échec de la mise à jour de l'adresse.");
+                    }
                     break;
 
                 case 4: // changer tel
+                    Console.WriteLine(espace + "Veuillez entrer votre nouveau numéro de téléphone :");
+                    string nouveauTel = SaisirTel();
+                    if (UpdateTelephoneSimple(connection, membre.Id, nouveauTel))
+                    {
+                        membre.Telephone = nouveauTel;
+                        Console.WriteLine("Numéro de téléphone mis à jour avec succès.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Échec de la mise à jour du numéro de téléphone.");
+                    }
                     break;
 
                 case 5: // changer Email
+                    Console.WriteLine(espace + "Veuillez entrer votre nouvelle adresse e-mail :");
+                    string nouveauMail = SaisirString(50);
+                    if (UpdateMailSimple(connection, membre.Id, nouveauMail))
+                    {
+                        membre.Email = nouveauMail;
+                        Console.WriteLine("Adresse e-mail mise à jour avec succès.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Échec de la mise à jour de l'adresse e-mail.");
+                    }
                     break;
 
                 case 6: // changer mdp
+                    Console.WriteLine(espace + "Veuillez entrer votre mot de passe actuel :");
+                    string mdp = Console.ReadLine();
+                    if(mdp == membre.MotDePasse)
+                    {
+                        string nouveauMdp = SaisirMotdePasse(espace);
+                        if(!UpdateMdpSimple(connection, membre.Id, nouveauMdp))
+                        {
+                            Console.WriteLine("Échec de la mise à jour du mot de passe.");
+                        }
+                        else
+                        {
+                            membre.MotDePasse = nouveauMdp;
+                            Console.WriteLine("Mot de passe mis à jour avec succès.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Mot de passe incorrect. Retour à la sélection des choix.");
+                    }
                     break;
 
                 case 7: // Quitter le programme
@@ -838,7 +913,7 @@ namespace BDD_Salle_de_Sport
             do
             {
                 tel = Console.ReadLine();
-                if (tel.Length < 20 || !long.TryParse(tel, out _))
+                if (tel.Length > 20 || !long.TryParse(tel, out _))
                 {
                     Console.WriteLine("Veuillez entrer un numéro de téléphone valide.");
                 }
