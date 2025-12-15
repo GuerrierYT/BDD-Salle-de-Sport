@@ -676,12 +676,12 @@ namespace BDD_Salle_de_Sport
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous modifier ?\n");
-            Console.WriteLine(espace + "1) Votre nom.");
-            Console.WriteLine(espace + "2) Votre prénom.");
-            Console.WriteLine(espace + "3) Votre adresse.");
-            Console.WriteLine(espace + "4) Votre numéro de téléphone.");
-            Console.WriteLine(espace + "5) Votre adresse mail");
-            Console.WriteLine(espace + "6) Votre mot de passe.");
+            Console.WriteLine(espace + "1) Le nom.");
+            Console.WriteLine(espace + "2) Le prénom.");
+            Console.WriteLine(espace + "3) L'adresse.");
+            Console.WriteLine(espace + "4) Le numéro de téléphone.");
+            Console.WriteLine(espace + "5) L'adresse mail");
+            Console.WriteLine(espace + "6) Le mot de passe.");
             Console.WriteLine(espace + "7) Aucune information.");
 
             do
