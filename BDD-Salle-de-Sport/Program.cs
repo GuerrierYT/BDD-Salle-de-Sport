@@ -8,8 +8,9 @@ namespace BDD_Salle_de_Sport
         static void Main(string[] args)
         {
             string espace = "                                        ";
-            MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données
-            Membre membre = new Membre();
+
+            MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données en tant que root
+            Membre membre = new Membre(); // Objet membre pour stocker les infos du membre connecté
             connection = ConnexionUtilisateur(connection, ref membre); // Gère la connexion utilisateur (admin/membre)
 
             if (connection != null) // Vérifie si la connexion a été établie avant de la fermer
@@ -181,6 +182,7 @@ namespace BDD_Salle_de_Sport
             else
             {
                 Console.WriteLine("Créer un compte ou réessayer.");
+
             }
 
             return connection;
@@ -215,6 +217,53 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #region Interface
+        static void InterfaceConnexionUtilisateur(MySqlConnection connection, string login, string password, string espace)
+        {
+            int rep = 0;
+            Console.WriteLine("\nQue souhaitez-vous faire ?\n");
+            Console.WriteLine(espace + "1) Réessayer de vous connecter.");
+            Console.WriteLine(espace + "2) Vous inscrire.");
+            Console.WriteLine(espace + "3) Quitter le programme.");
+            do
+            {
+                Console.WriteLine("\nVotre choix : ");
+                string choix = Console.ReadLine();
+                try
+                {
+                    rep = Convert.ToInt32(choix);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Veuillez entrer un nombre valide.");
+                }
+            }
+            while (rep < 0 || rep > 6);
+            switch (rep)
+            {
+                case 1: //Gérer les membres*
+                    
+                    break;
+                case 2: // Gérer les coachs
+                    
+                    break;
+                case 3: // Gérer les cours
+                    break;
+
+                case 4: // Gérer les inscriptions
+                    break;
+
+                case 5: // Quitter le jeu
+                    break;
+
+                case 6: // Quitter le jeu
+                    break;
+
+                default:
+                    Console.WriteLine("Choix invalide.");
+                    rep = -1;
+                    break;
+            }
+        }
         #region Interfaces Admins
         static int InterfaceAdminPrincipal(MySqlConnection Connection, string espace)
         {
