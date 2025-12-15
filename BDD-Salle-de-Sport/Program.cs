@@ -57,6 +57,30 @@ namespace BDD_Salle_de_Sport
                 }
             }
         }
+        static int ExecuteQueryInt(MySqlConnection connection, string query)
+        {
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                try
+                {
+                    object result = command.ExecuteScalar();
+                    return Convert.ToInt32(result);
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine("Error executing query: " + ex.Message);
+                    return -1;
+                }
+            }
+        }
+        static bool UtilisateurEstAdmin(MySqlConnection connection, string login, string password)
+        {
+            return ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Administrateur WHERE login = '{login}' AND mot_de_passe = '{password}'") > 0;
+        }
+        static bool UtilisateurEstMembre(MySqlConnection connection, string login, string password)
+        {
+            return ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Membre WHERE adresse_mail = '{login}' AND mot_de_passe = '{password}'") > 0;
+        }
         static bool ConnexionUtilisateur(MySqlConnection connection)
         {
             string login = "";
