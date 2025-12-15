@@ -13,7 +13,7 @@ namespace BDD_Salle_de_Sport
         {
             MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données
             ConnexionUtilisateur(connection);
-            InterfaceUtilisateur(connection);
+            //InterfaceUtilisateur(connection);
 
 
             if (connection != null) // Vérifie si la connexion a été établie avant de la fermer
@@ -75,13 +75,13 @@ namespace BDD_Salle_de_Sport
         }
         static bool UtilisateurEstAdmin(MySqlConnection connection, string login, string password)
         {
-            return ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Administrateur WHERE login = '{login}' AND mot_de_passe = '{password}'") > 0;
+            return ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Administrateur WHERE login = '{login}' AND password = '{password}'") > 0;
         }
         static bool UtilisateurEstMembre(MySqlConnection connection, string login, string password)
         {
             return ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Membre WHERE adresse_mail = '{login}' AND mot_de_passe = '{password}'") > 0;
         }
-        static bool ConnexionUtilisateur(MySqlConnection connection)
+        static void ConnexionUtilisateur(MySqlConnection connection)
         {
             string login = "";
             string password = "";
@@ -89,8 +89,21 @@ namespace BDD_Salle_de_Sport
             login = Console.ReadLine();
             Console.Write("Password : ");
             password = Console.ReadLine();
-            ExecuteQuery(connection, $"SELECT Count(*) FROM Membre WHERE adresse_mail = '{login}' AND mot_de_passe = '{password}'");
-            return (true);
+            if (UtilisateurEstAdmin(connection, login, password))
+            {
+                Console.WriteLine("Bienvenue Administrateur !");
+                InterfaceUtilisateur(connection);
+            }
+            else if (UtilisateurEstMembre(connection, login, password))
+            {
+                Console.WriteLine("Bienvenue Membre !");
+                InterfaceUtilisateur(connection);
+            }
+            else
+            {
+                Console.WriteLine("Compte inexistant.");
+                Console.WriteLine("Créer un compte ou réessayer.");
+            }
         }
         static void InterfaceUtilisateur(MySqlConnection connection)
         {
