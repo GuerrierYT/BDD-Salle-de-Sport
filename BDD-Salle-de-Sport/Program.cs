@@ -768,7 +768,7 @@ namespace BDD_Salle_de_Sport
                     break;
             }
         }
-        static void InterfaceGestionInscriptions(MySqlConnection Connection, string espace) // A FINIR
+        static void InterfaceGestionInscriptions(MySqlConnection Connection, string espace) // FINI
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
