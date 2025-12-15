@@ -783,16 +783,41 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #region Saisie sécu /!\ Mettre des Console.WriteLine avant
-        static string SaisirMot()
+        string SaisirString(int tailleMax)
         {
-            string mot;
+            string saisie = "";
+            bool valide = false;
+
+            while (!valide)
+            {
+                saisie = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(saisie))
+                {
+                    Console.WriteLine($"Erreur : Le champ ne peut pas être vide. Recommencez.");
+                }
+                else if (saisie.Length > tailleMax)
+                {
+                    Console.WriteLine($"Erreur : Le texte est trop long (Max 50 lettres).");
+                }
+                else
+                {
+                    valide = true;
+                }
+            }
+            return saisie.Trim().Replace("'", " ");
+        }
+
+        string SaisirTel()
+        {
+            string tel;
             bool valide = false;
             do
             {
-                mot = Console.ReadLine();
-                if (!EstMotValide(mot))
+                tel = Console.ReadLine();
+                if (tel.Length < 20 || !long.TryParse(tel, out _))
                 {
-                    Console.WriteLine("Mot invalide. Veuillez réessayer. Attention à ne pas mettre de caractères spéciaux.");
+                    Console.WriteLine("Veuillez entrer un numéro de téléphone valide.");
                 }
                 else
                 {
@@ -800,21 +825,10 @@ namespace BDD_Salle_de_Sport
                 }
             }
             while (!valide);
-            return mot;
-        }
-        static bool EstMotValide(string mot) // Vérifie si le mot est valide (pas de caractères spéciaux, seulement des lettres )
-        {
-            foreach (char c in mot)
-            {
-                if (!char.IsLetter(c) && c != '-' && c != ' ')
-                {
-                    return false;
-                }
-            }
-            return true;
+            return tel;
         }
 
-        static int SaisirNombrePositif() // Saisie d'un nombre positif
+        int SaisirNombrePositif()
         {
             int rep = -1;
             do
