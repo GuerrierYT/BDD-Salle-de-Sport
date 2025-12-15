@@ -301,7 +301,7 @@ namespace BDD_Salle_de_Sport
             else
             {
                 Console.WriteLine("Créer un compte ou réessayer.");
-                InterfaceConnexionUtilisateur( connection,  login,  password, espace, membre);
+                InterfaceConnexionUtilisateur( connection,  login,  password, espace);
             }
 
             return connection;
@@ -336,7 +336,7 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #region Interface
-        static void InterfaceConnexionUtilisateur(MySqlConnection connection, string login, string password, string espace, Membre membre)
+        static void InterfaceConnexionUtilisateur(MySqlConnection connection, string login, string password, string espace)
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -360,7 +360,7 @@ namespace BDD_Salle_de_Sport
             switch (rep)
             {
                 case 1: // Réessayer de se connecter
-                    ConnexionUtilisateur(connection,ref membre, espace);
+                    ConnexionUtilisateur(connection, espace);
                     break;
                 case 2: // S'inscrire
 
