@@ -69,6 +69,22 @@ namespace BDD_Salle_de_Sport
                 }
             }
         }
+        static string ExecuteQueryString(MySqlConnection connection, string query) // Pour les requêtes qui retournent une seule valeur chaîne
+        {
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                try
+                {
+                    object result = command.ExecuteScalar();
+                    return result.ToString();
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine("Error executing query: " + ex.Message);
+                    return null;
+                }
+            }
+        }
         #endregion
         #region Gestion Connexion Utilisateur
         static bool UtilisateurEstAdmin(MySqlConnection connection, string login, string password) // Vérifie si l'utilisateur est un admin
@@ -78,6 +94,10 @@ namespace BDD_Salle_de_Sport
         static bool UtilisateurEstMembre(MySqlConnection connection, string login, string password) // Vérifie si l'utilisateur est un membre
         {
             return ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Membre WHERE adresse_mail = '{login}' AND mot_de_passe = '{password}'") > 0;
+        }
+        static bool UtilisateurEstAdminPrincipal(MySqlConnection connection, string login, string password) // Vérifie si l'admin est principal
+        {
+            return ExecuteQueryString(connection, $"SELECT role FROM Administrateur WHERE login = '{login}' AND password = '{password}'") == "Principal";
         }
         static MySqlConnection ConnexionUtilisateur(MySqlConnection connection) // Gère la connexion utilisateur
         {
@@ -89,13 +109,14 @@ namespace BDD_Salle_de_Sport
             password = Console.ReadLine();
             if (UtilisateurEstAdmin(connection, login, password))
             {
+                bool estPrincipal = UtilisateurEstAdminPrincipal(connection, login, password);
                 if (connection != null) // On ferme la connexion root
                 {
                     connection.Close();
                 }
-                //connection = ConnecterEnTantQueAdministrateur();
+                connection = ConnecterEnTantQueAdmin(estPrincipal);
                 Console.WriteLine("Bienvenue Administrateur !");
-                InterfaceUtilisateur(connection);
+                
             }
             else if (UtilisateurEstMembre(connection, login, password))
             {
@@ -105,7 +126,7 @@ namespace BDD_Salle_de_Sport
                 }
                 connection = ConnecterEnTantQueMembre();
                 Console.WriteLine("Bienvenue Membre !");
-                InterfaceUtilisateur(connection);
+                
             }
             else
             {
@@ -301,11 +322,13 @@ namespace BDD_Salle_de_Sport
             {
                 // Connexion "Dieu" pour Thibault
                 connectionString = "server=localhost;user=admin_principal;database=GestionSalleSport;port=3306;password=MotDePasseFort1!";
+                Console.WriteLine(">> Connexion en tant qu'Admin PRINCIPAL...");
             }
             else
             {
                 // Connexion limitée pour Chris
                 connectionString = "server=localhost;user=admin_app;database=GestionSalleSport;port=3306;password=MotDePasseApp2!";
+                Console.WriteLine(">> Connexion en tant qu'Admin SECONDAIRE");
             }
 
             MySqlConnection connection = new MySqlConnection(connectionString);
