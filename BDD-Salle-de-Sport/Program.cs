@@ -5,13 +5,10 @@ namespace BDD_Salle_de_Sport
 {
     internal class Program
     {
-        #region
         static void Main(string[] args)
         {
             MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données
-            connection = ConnexionUtilisateur(connection);
-
-
+            connection = ConnexionUtilisateur(connection); // Gère la connexion utilisateur (admin/membre)
 
             if (connection != null) // Vérifie si la connexion a été établie avant de la fermer
             {
@@ -20,10 +17,9 @@ namespace BDD_Salle_de_Sport
             Console.ReadKey();
         }
 
-        #endregion
 
 
-        static MySqlConnection ConnectToDatabase()
+        static MySqlConnection ConnectToDatabase() // Connexion en tant que root pour vérifier les identifiants
         {
             string connectionString = "server=localhost;user=root;database=GestionSalleSport;port=3306;password=root";
             MySqlConnection connection = new MySqlConnection(connectionString);
@@ -39,7 +35,8 @@ namespace BDD_Salle_de_Sport
                 return null;
             }
         }
-        static void ExecuteQuery(MySqlConnection connection, string query)
+        #region Requêtes SQL
+        static void ExecuteQuery(MySqlConnection connection, string query) // Pour les requêtes qui retournent plusieurs lignes
         {
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
@@ -58,7 +55,7 @@ namespace BDD_Salle_de_Sport
                 }
             }
         }
-        static int ExecuteQueryInt(MySqlConnection connection, string query)
+        static int ExecuteQueryInt(MySqlConnection connection, string query) // Pour les requêtes qui retournent une seule valeur entière
         {
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
@@ -74,15 +71,17 @@ namespace BDD_Salle_de_Sport
                 }
             }
         }
-        static bool UtilisateurEstAdmin(MySqlConnection connection, string login, string password)
+        #endregion
+        #region Gestion Connexion Utilisateur
+        static bool UtilisateurEstAdmin(MySqlConnection connection, string login, string password) // Vérifie si l'utilisateur est un admin
         {
             return ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Administrateur WHERE login = '{login}' AND password = '{password}'") > 0;
         }
-        static bool UtilisateurEstMembre(MySqlConnection connection, string login, string password)
+        static bool UtilisateurEstMembre(MySqlConnection connection, string login, string password) // Vérifie si l'utilisateur est un membre
         {
             return ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Membre WHERE adresse_mail = '{login}' AND mot_de_passe = '{password}'") > 0;
         }
-        static MySqlConnection ConnexionUtilisateur(MySqlConnection connection)
+        static MySqlConnection ConnexionUtilisateur(MySqlConnection connection) // Gère la connexion utilisateur
         {
             string login = "";
             string password = "";
@@ -118,6 +117,7 @@ namespace BDD_Salle_de_Sport
 
             return connection;
         }
+        #endregion
         static void InterfaceUtilisateur(MySqlConnection connection)
         {
             ExecuteQuery(connection, "SELECT nom FROM Salle"); // Exemple de requête pour récupérer les noms des salles
@@ -253,7 +253,7 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #region Connexions Membres/Admins
-        static MySqlConnection ConnecterEnTantQueMembre()
+        static MySqlConnection ConnecterEnTantQueMembre() // Connexion sécurisée pour les membres
         {
             // On utilise le login restreint "membre_client"
             string connectionString = "server=localhost;user=membre_client;database=GestionSalleSport;port=3306;password=Membre";
@@ -275,7 +275,7 @@ namespace BDD_Salle_de_Sport
             }
         }
 
-        public static MySqlConnection ConnecterEnTantQueAdmin(bool estPrincipal)
+        public static MySqlConnection ConnecterEnTantQueAdmin(bool estPrincipal) // Connexion sécurisée pour les administrateurs
         {
             string connectionString = "";
 
