@@ -147,6 +147,112 @@ namespace BDD_Salle_de_Sport
             }
         }
         */
+
+        #region Interface
+        static int InterfaceAdminPrincipal()
+        {
+            int rep = 0;
+            Console.WriteLine("\nQue souhaitez-vous faire ?\n");
+            Console.WriteLine(espace + "1) Gérer les membres.");
+            Console.WriteLine(espace + "2) Gérer les coachs.");
+            Console.WriteLine(espace + "3) Gérer les cours.");
+            Console.WriteLine(espace + "4) Gérer les inscriptions.");
+            Console.WriteLine(espace + "5) Gérer les employés.");
+            Console.WriteLine(espace + "6) Quitter le programme.");
+            do
+            {
+                Console.WriteLine("\nVotre choix : ");
+                string choix = Console.ReadLine();
+                try
+                {
+                    rep = Convert.ToInt32(choix);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Veuillez entrer un nombre valide.");
+                }
+            }
+            while (rep < 0 || rep > 6);
+            switch (rep)
+            {
+
+                case 1: //Gérer les membres
+                    break;
+
+                case 2: // Gérer les coachs
+                    break;
+
+                case 3: // Gérer les cours
+                    break;
+
+                case 4: // Gérer les inscriptions
+                    break;
+
+                case 5: // Quitter le jeu
+                    break;
+
+                case 6: // Quitter le jeu
+                    break;
+
+                default:
+                    Console.WriteLine("Choix invalide.");
+                    rep = -1;
+                    break;
+            }
+            return rep;
+        }
+
+        static int InterfaceAdminSecondaire()
+        {
+            int rep = 0;
+            Console.WriteLine("\nQue souhaitez-vous faire ?\n");
+            Console.WriteLine(espace + "1) Gérer les membres.");
+            Console.WriteLine(espace + "2) Gérer les coachs.");
+            Console.WriteLine(espace + "3) Gérer les cours.");
+            Console.WriteLine(espace + "4) Gérer les inscriptions.");
+            Console.WriteLine(espace + "5) Quitter le programme.");
+            do
+            {
+                Console.WriteLine("\nVotre choix : ");
+                string choix = Console.ReadLine();
+                try
+                {
+                    rep = Convert.ToInt32(choix);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Veuillez entrer un nombre valide.");
+                }
+            }
+            while (rep < 0 || rep > 5);
+            switch (rep)
+            {
+
+                case 1: //Gérer les membres
+                    break;
+
+                case 2: // Gérer les coachs
+                    break;
+
+                case 3: // Gérer les cours
+                    break;
+
+                case 4: // Gérer les inscriptions
+                    break;
+
+                case 5: // Quitter le jeu
+                    break;
+
+                default:
+                    Console.WriteLine("Choix invalide.");
+                    rep = -1;
+                    break;
+            }
+            return rep;
+        }
+        #endregion
+
+
         #region Connexions Membres/Admins
         static MySqlConnection ConnecterEnTantQueMembre()
         {
