@@ -118,6 +118,124 @@ namespace BDD_Salle_de_Sport
                 }
             }
         }
+
+        #region Changement attributs membre
+        static bool UpdatePrenomSimple(MySqlConnection connection, int idMembre, string nouveauPrenom)
+        {
+            try
+            {
+                string query = "UPDATE Membre SET prenom = '" + nouveauPrenom + "' WHERE id_membre = " + idMembre;
+
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                int resultat = command.ExecuteNonQuery();
+
+                // Si resultat est 1, c'est bon.
+                return resultat > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur : " + ex.Message);
+                return false;
+            }
+        }
+        static bool UpdateNomSimple(MySqlConnection connection, int idMembre, string nouveauNom)
+        {
+            try
+            {
+                string query = "UPDATE Membre SET nom = '" + nouveauNom + "' WHERE id_membre = " + idMembre;
+
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                int resultat = command.ExecuteNonQuery();
+
+                // Si resultat est 1, c'est bon.
+                return resultat > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur : " + ex.Message);
+                return false;
+            }
+        }
+        static bool UpdateAdresseSimple(MySqlConnection connection, int idMembre, string nouvelleAdresse)
+        {
+            try
+            {
+                string query = "UPDATE Membre SET adresse = '" + nouvelleAdresse + "' WHERE id_membre = " + idMembre;
+
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                int resultat = command.ExecuteNonQuery();
+
+                // Si resultat est 1, c'est bon.
+                return resultat > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur : " + ex.Message);
+                return false;
+            }
+        }
+        static bool UpdateTelephoneSimple(MySqlConnection connection, int idMembre, string telephone)
+        {
+            try
+            {
+                string query = "UPDATE Membre SET numero_tel = '" + telephone + "' WHERE id_membre = " + idMembre;
+
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                int resultat = command.ExecuteNonQuery();
+
+                // Si resultat est 1, c'est bon.
+                return resultat > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur : " + ex.Message);
+                return false;
+            }
+        }
+        static bool UpdateMailSimple(MySqlConnection connection, int idMembre, string mail)
+        {
+            try
+            {
+                string query = "UPDATE Membre SET adresse_mail = '" + mail + "' WHERE id_membre = " + idMembre;
+
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                int resultat = command.ExecuteNonQuery();
+
+                // Si resultat est 1, c'est bon.
+                return resultat > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur : " + ex.Message);
+                return false;
+            }
+        }
+        static bool UpdateMdpSimple(MySqlConnection connection, int idMembre, string mdp)
+        {
+            try
+            {
+                string query = "UPDATE Membre SET mot_de_passe = '" + mdp + "' WHERE id_membre = " + idMembre;
+
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                int resultat = command.ExecuteNonQuery();
+
+                // Si resultat est 1, c'est bon.
+                return resultat > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur : " + ex.Message);
+                return false;
+            }
+        }
+
+        #endregion
         #endregion
 
         #region Gestion Connexion Utilisateur
@@ -446,6 +564,8 @@ namespace BDD_Salle_de_Sport
                     Console.WriteLine("========= MON PROFIL =========");
                     Console.WriteLine(membre.toString());
                     Console.WriteLine("==============================");
+                    Console.WriteLine("\nAppuyez sur Entrée pour revenir au menu...");
+                    Console.ReadKey();
                     break;
 
                 case 2: // Modifier mes informations
@@ -476,6 +596,62 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #endregion
+        static void ModifierSesInfos(MySqlConnection connection, string espace, Membre membre)
+        {
+            int rep = 0;
+            Console.WriteLine("\nQue souhaitez-vous modifier ?\n");
+            Console.WriteLine(espace + "1) Votre nom.");
+            Console.WriteLine(espace + "2) Votre prénom.");
+            Console.WriteLine(espace + "3) Votre adresse.");
+            Console.WriteLine(espace + "4) Votre numéro de téléphone.");
+            Console.WriteLine(espace + "5) Votre adresse mail");
+            Console.WriteLine(espace + "6) Votre mot de passe.");
+            Console.WriteLine(espace + "7) Aucune information.");
+
+            do
+            {
+                Console.WriteLine("\nVotre choix : ");
+                string choix = Console.ReadLine();
+                try
+                {
+                    rep = Convert.ToInt32(choix);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Veuillez entrer un nombre valide.");
+                }
+            }
+            while (rep < 0 || rep > 7);
+            switch (rep)
+            {
+
+                case 1: //Voir mes informations
+                    
+                    break;
+
+                case 2: // Modifier mes informations
+                    break;
+
+                case 3: // Voir les cours disponibles
+                    break;
+
+                case 4: // S'inscrire à un cours
+                    break;
+
+                case 5: // Se désinscrire d'un cours
+                    break;
+
+                case 6: // Voir son historique
+                    break;
+
+                case 7: // Quitter le programme
+                    break;
+
+                default:
+                    Console.WriteLine("Choix invalide.");
+                    break;
+            }
+        }
 
         #region Connexions Membres/Admins
         static MySqlConnection ConnecterEnTantQueMembre() // Connexion sécurisée pour les membres
