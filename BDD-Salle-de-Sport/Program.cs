@@ -752,15 +752,15 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine("\nInscription d'un nouveau membre :\n");
             #region Saisie des informations
             Console.WriteLine(espace + "Veuillez entrer le nom :");
-            string nom = Console.ReadLine();
+            string nom = SaisirString(50);
             Console.WriteLine(espace + "Veuillez entrer le prénom :");
-            string prenom = Console.ReadLine();
+            string prenom = SaisirString(50);
             Console.WriteLine(espace + "Veuillez entrer le adresse e-mail :");
-            string email = Console.ReadLine();
+            string email = SaisirString(100);
             Console.WriteLine(espace + "Veuillez entrer le numéro de téléphone :");
-            string telephone = Console.ReadLine();
+            string telephone = SaisirTel();
             Console.WriteLine(espace + "Veuillez entrer l'adresse :");
-            string adresse = Console.ReadLine();
+            string adresse = SaisirString(255);
             string motDePasse = SaisirMotdePasse(espace);
             #endregion
             ExecuteNonQuery(connection, "INSERT INTO Membre (nom, prenom, adresse, numero_tel, adresse_mail, mot_de_passe, admis) " + // Ajout du nouveau membre dans la BDD
