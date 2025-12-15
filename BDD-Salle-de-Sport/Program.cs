@@ -443,7 +443,9 @@ namespace BDD_Salle_de_Sport
             {
 
                 case 1: //Voir mes informations
+                    Console.WriteLine("========= MON PROFIL =========");
                     Console.WriteLine(membre.toString());
+                    Console.WriteLine("==============================");
                     break;
 
                 case 2: // Modifier mes informations
