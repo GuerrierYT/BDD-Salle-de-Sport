@@ -8,10 +8,9 @@ namespace BDD_Salle_de_Sport
         static void Main(string[] args)
         {
             string espace = "                                        ";
-
             MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données en tant que root
-            Membre membre = new Membre(); // Objet membre pour stocker les infos du membre connecté
-            connection = ConnexionUtilisateur(connection, ref membre, espace); // Gère la connexion utilisateur (admin/membre)
+            // Objet membre pour stocker les infos du membre connecté
+            connection = ConnexionUtilisateur(connection, espace); // Gère la connexion utilisateur (admin/membre)
 
             if (connection != null) // Vérifie si la connexion a été établie avant de la fermer
             {
@@ -268,7 +267,7 @@ namespace BDD_Salle_de_Sport
         {
             return ExecuteQueryString(connection, $"SELECT role FROM Administrateur WHERE login = '{login}' AND password = '{password}'") == "Principal";
         }
-        static MySqlConnection ConnexionUtilisateur(MySqlConnection connection, ref Membre membre, string espace) // Gère la connexion utilisateur
+        static MySqlConnection ConnexionUtilisateur(MySqlConnection connection, string espace) // Gère la connexion utilisateur
         {
             string login = "";
             string password = "";
@@ -292,6 +291,7 @@ namespace BDD_Salle_de_Sport
                 {
                     connection.Close();
                 }
+                Membre membre = new Membre();
                 connection = ConnecterEnTantQueMembre();
                 RemplirInfosMembre(connection, login, membre);
                 Console.WriteLine($"Bienvenue {membre.NomComplet} !");
