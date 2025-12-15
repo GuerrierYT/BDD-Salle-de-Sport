@@ -64,7 +64,7 @@ namespace BDD_Salle_de_Sport
         }
         static void InterfaceUtilisateur(MySqlConnection connection)
         {
-
+            ExecuteQuery(connection, "SELECT nom FROM Salle"); // Exemple de requête pour récupérer les noms des salles
         }
     }
 }
