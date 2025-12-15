@@ -7,6 +7,7 @@ namespace BDD_Salle_de_Sport
     {
         static void Main(string[] args)
         {
+            string espace = "                                        ";
             MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données
             connection = ConnexionUtilisateur(connection); // Gère la connexion utilisateur (admin/membre)
 
@@ -152,7 +153,7 @@ namespace BDD_Salle_de_Sport
         */
 
         #region Interface
-        static int InterfaceAdminPrincipal(MySqlConnection Connection)
+        static int InterfaceAdminPrincipal(MySqlConnection Connection, string espace)
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -179,7 +180,8 @@ namespace BDD_Salle_de_Sport
             switch (rep)
             {
 
-                case 1: //Gérer les membres
+                case 1: //Gérer les membres*
+                    InterfaceGestionMembres(Connection, espace);
                     break;
 
                 case 2: // Gérer les coachs
@@ -205,7 +207,7 @@ namespace BDD_Salle_de_Sport
             return rep;
         }
 
-        static int InterfaceAdminSecondaire(MySqlConnection Connection)
+        static int InterfaceAdminSecondaire(MySqlConnection Connection, string espace)
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -232,6 +234,7 @@ namespace BDD_Salle_de_Sport
             {
 
                 case 1: //Gérer les membres
+                    InterfaceGestionMembres(Connection, espace);
                     break;
 
                 case 2: // Gérer les coachs
@@ -244,6 +247,55 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 5: // Quitter le jeu
+                    break;
+
+                default:
+                    Console.WriteLine("Choix invalide.");
+                    rep = -1;
+                    break;
+            }
+            return rep;
+        }
+
+        static int InterfaceGestionMembres(MySqlConnection Connection, string espace)
+        {
+            int rep = 0;
+            Console.WriteLine("\nQue souhaitez-vous faire ?\n");
+            Console.WriteLine(espace + "1) Ajouter un membre.");
+            Console.WriteLine(espace + "2) Supprimer un membre.");
+            Console.WriteLine(espace + "3) Modifier un membre.");
+            Console.WriteLine(espace + "4) Rechercher un membre.");
+            Console.WriteLine(espace + "5) Retour au menu précédent.");
+            do
+            {
+                Console.WriteLine("\nVotre choix : ");
+                string choix = Console.ReadLine();
+                try
+                {
+                    rep = Convert.ToInt32(choix);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Veuillez entrer un nombre valide.");
+                }
+            }
+            while (rep < 0 || rep > 5);
+            switch (rep)
+            {
+
+                case 1: //Ajouter un membre
+                    break;
+
+                case 2: // Supprimer un membre
+                    break;
+
+                case 3: // Modifier un membre
+                    break;
+
+                case 4: // Rechercher un membre
+                    break;
+
+                case 5: // Retour au menu précédent
                     break;
 
                 default:
