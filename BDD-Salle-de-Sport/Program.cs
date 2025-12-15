@@ -7,8 +7,12 @@ namespace BDD_Salle_de_Sport
     {
         static void Main(string[] args)
         {
-            MySqlConnection connection = ConnectToDatabase();
-            if (connection != null)
+            MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données
+            ConnexionUtilisateur(connection);
+            InterfaceUtilisateur(connection);
+
+
+            if (connection != null) // Vérifie si la connexion a été établie avant de la fermer
             {
                 connection.Close();
             }
@@ -22,7 +26,6 @@ namespace BDD_Salle_de_Sport
             {
                 connection.Open(); // Ouvre la connexion
                 Console.WriteLine("Connection to database established successfully.");
-                InterfaceUtilisateur(connection);
                 return connection;
             }
             catch (MySqlException ex)
@@ -50,6 +53,17 @@ namespace BDD_Salle_de_Sport
                     Console.WriteLine("Error executing query: " + ex.Message);
                 }
             }
+        }
+        static bool ConnexionUtilisateur(MySqlConnection connection)
+        {
+            string login = "";
+            string password = "";
+            Console.Write("Login : ");
+            login = Console.ReadLine();
+            Console.Write("Password : ");
+            password = Console.ReadLine();
+            ExecuteQuery(connection, $"SELECT Count(*) FROM Membre WHERE adresse_mail = '{login}' AND mot_de_passe = '{password}'");
+            return (true);
         }
         static void InterfaceUtilisateur(MySqlConnection connection)
         {
