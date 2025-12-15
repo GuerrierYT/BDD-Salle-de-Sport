@@ -86,6 +86,38 @@ namespace BDD_Salle_de_Sport
                 }
             }
         }
+        static bool ExecuteQueryBool(MySqlConnection connection, string query) // Pour les requêtes qui retournent une seule valeur booléenne
+        {
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                try
+                {
+                    object result = command.ExecuteScalar();
+                    return Convert.ToBoolean(result);
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine("Error executing query: " + ex.Message);
+                    return false;
+                }
+            }
+        }
+        static DateTime ExecuteQueryDateTime(MySqlConnection connection, string query) // Pour les requêtes qui retournent une seule valeur DateTime
+        {
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                try
+                {
+                    object result = command.ExecuteScalar();
+                    return Convert.ToDateTime(result);
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine("Error executing query: " + ex.Message);
+                    return DateTime.MinValue;
+                }
+            }
+        }
         #endregion
         #region Gestion Connexion Utilisateur
         static bool UtilisateurEstAdmin(MySqlConnection connection, string login, string password) // Vérifie si l'utilisateur est un admin
@@ -117,7 +149,6 @@ namespace BDD_Salle_de_Sport
                 }
                 connection = ConnecterEnTantQueAdmin(estPrincipal);
                 Console.WriteLine("Bienvenue Administrateur !");
-                
             }
             else if (UtilisateurEstMembre(connection, login, password))
             {
