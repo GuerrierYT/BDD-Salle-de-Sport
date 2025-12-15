@@ -773,7 +773,7 @@ namespace BDD_Salle_de_Sport
                 mot = Console.ReadLine();
                 if (!EstMotValide(mot))
                 {
-                    Console.WriteLine("Mot invalide. Veuillez réessayer.");
+                    Console.WriteLine("Mot invalide. Veuillez réessayer. Attention à ne pas mettre de caractères spéciaux.");
                 }
                 else
                 {
