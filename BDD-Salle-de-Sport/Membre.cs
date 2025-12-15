@@ -21,7 +21,7 @@ namespace BDD_Salle_de_Sport
         public string NomComplet => $"{Prenom} {Nom}";
 
         // Constructeur vide (nécessaire pour la lecture BDD)
-        public Membre() 
+        public Membre()
         {
             this.Id = 0;
             this.Nom = null;
@@ -30,9 +30,8 @@ namespace BDD_Salle_de_Sport
             this.Telephone = null;
             this.Email = null;
             this.MotDePasse = null;
-            this.DateInscription = null;
+            this.DateInscription = DateTime.Now;
             this.Admis = false;
-            this.NomComplet = null;
         }
 
         // Constructeur pour faciliter l'inscription
@@ -46,10 +45,17 @@ namespace BDD_Salle_de_Sport
             DateInscription = DateTime.Now;
         }
 
-
+        
         public override string ToString()
         {
             return $"[{Id}] {NomComplet} - {Email} (Statut: {(Admis ? "Validé" : "En attente")})";
+        }
+
+        public string toString() // Pour l'utilisateur
+        {
+            return $"Nom : {Nom},\nPrénom : {Prenom},\nAdresse : {Adresse},\nTelephone : {Telephone},\nEmail : {Email}," +
+                $"\nDate d'inscription : {DateInscription},\nAdmis : {Admis}";
+
         }
     }
 }

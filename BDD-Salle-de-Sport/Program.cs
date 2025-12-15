@@ -9,7 +9,7 @@ namespace BDD_Salle_de_Sport
         {
             string espace = "                                        ";
             MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données
-            Membre membre = new Membre()
+            Membre membre = new Membre();
             connection = ConnexionUtilisateur(connection, ref membre); // Gère la connexion utilisateur (admin/membre)
 
             if (connection != null) // Vérifie si la connexion a été établie avant de la fermer
@@ -132,7 +132,7 @@ namespace BDD_Salle_de_Sport
         {
             return ExecuteQueryString(connection, $"SELECT role FROM Administrateur WHERE login = '{login}' AND password = '{password}'") == "Principal";
         }
-        static MySqlConnection ConnexionUtilisateur(MySqlConnection connection) // Gère la connexion utilisateur
+        static MySqlConnection ConnexionUtilisateur(MySqlConnection connection, ref Membre membre) // Gère la connexion utilisateur
         {
             string login = "";
             string password = "";
@@ -157,8 +157,10 @@ namespace BDD_Salle_de_Sport
                     connection.Close();
                 }
                 connection = ConnecterEnTantQueMembre();
-                Console.WriteLine("Bienvenue Membre !");
-                
+                RemplirInfosMembre(connection, login, membre);
+                Console.WriteLine($"Bienvenue {membre.NomComplet} !");
+                Console.WriteLine(membre.toString());
+
             }
             else
             {
@@ -167,6 +169,33 @@ namespace BDD_Salle_de_Sport
             }
 
             return connection;
+        }
+
+        // Fonction outil pour récupérer les infos
+        static void RemplirInfosMembre(MySqlConnection connection, string login, Membre membreAremplir)
+        {
+            string query = "SELECT * FROM Membre WHERE adresse_mail = @login";
+
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@login", login);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        membreAremplir.Id = Convert.ToInt32(reader["id_membre"]);
+                        membreAremplir.Nom = reader["nom"].ToString();
+                        membreAremplir.Prenom = reader["prenom"].ToString();
+                        membreAremplir.Email = reader["adresse_mail"].ToString();
+                        membreAremplir.MotDePasse = reader["mot_de_passe"].ToString();
+                        membreAremplir.Adresse = reader["adresse"].ToString();
+                        membreAremplir.Telephone = reader["numero_tel"].ToString();
+                        membreAremplir.DateInscription = Convert.ToDateTime(reader["date_inscription"]);
+                        membreAremplir.Admis = Convert.ToBoolean(reader["admis"]);
+                    }
+                }
+            }
         }
         #endregion
         #region Interface
@@ -324,7 +353,7 @@ namespace BDD_Salle_de_Sport
                     break;
             }
             return rep;
-        }
+        }   // Pour les admins
 
         static int InterfaceGestionCoachs(MySqlConnection Connection, string espace)
         {
@@ -380,7 +409,9 @@ namespace BDD_Salle_de_Sport
             return rep;
         }
        
-        static int InterfaceGestionMembresMembre(MySqlConnection Connection, string espace)
+
+
+        static int InterfaceMembre(MySqlConnection Connection, string espace, ref Membre membre) //Pour les membres
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -410,6 +441,7 @@ namespace BDD_Salle_de_Sport
             {
 
                 case 1: //Voir mes informations
+                    Console.WriteLine(membre.toString());
                     break;
 
                 case 2: // Modifier mes informations
@@ -424,7 +456,7 @@ namespace BDD_Salle_de_Sport
                 case 5: // Se désinscrire d'un cours
                     break;
 
-                case 6: // Quitter le programme
+                case 6: // Voir son historique
                     break;
 
                 case 7: // Quitter le programme
