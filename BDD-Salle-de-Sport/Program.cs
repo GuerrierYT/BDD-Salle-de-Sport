@@ -709,7 +709,7 @@ namespace BDD_Salle_de_Sport
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
-            Console.WriteLine(espace + "1) Ajouter un membre.");
+            Console.WriteLine(espace + "1) Inscrire un nouveau membre.");
             Console.WriteLine(espace + "2) Supprimer une inscription.");
             Console.WriteLine(espace + "3) Modifier une inscription.");
             Console.WriteLine(espace + "4) Voir la liste des inscriptions.");
@@ -730,7 +730,7 @@ namespace BDD_Salle_de_Sport
             while (rep < 0 || rep > 5);
             switch (rep)
             {
-                case 1: //Ajouter un membre
+                case 1: //Inscrire un nouveau membre
                     InterfaceAjoutMembre(Connection, espace);
                     break;
                 case 2: // Supprimer une inscription
@@ -1056,7 +1056,7 @@ namespace BDD_Salle_de_Sport
             }
         }
 
-        #region Connexions Membres/Admins
+        #region Connexions Membres/Admins (terminé)
         static MySqlConnection ConnecterEnTantQueMembre() // Connexion sécurisée pour les membres
         {
             // On utilise le login restreint "membre_client"
