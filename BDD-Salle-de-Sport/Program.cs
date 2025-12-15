@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 
 namespace BDD_Salle_de_Sport
 {
@@ -142,6 +143,77 @@ namespace BDD_Salle_de_Sport
                 }
             }
         } //Pour les requêtes qui retournent plusieurs lignes et colonnes
+        static void ExecuteQueryAfficheToutAuto(MySqlConnection connection, string query) // Affichage automatique des résultats de requêtes avec mise en forme
+        {
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                try
+                {
+                    MySqlDataReader reader = command.ExecuteReader();
+                    if (!reader.HasRows)
+                    {
+                        Console.WriteLine("Aucun résultat.");
+                        reader.Close();
+                        return;
+                    }
+                    List<string[]> toutesLesLignes = new List<string[]>(); // Liste pour stocker toutes les lignes de données en mémoire
+                    int[] largeursColonnes = new int[reader.FieldCount]; // Tableau pour stocker la largeur max de chaque colonne
+                    string[] entetes = new string[reader.FieldCount]; // Récupération des noms des colonnes (En-têtes)
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        entetes[i] = reader.GetName(i);
+                        largeursColonnes[i] = entetes[i].Length; // La largeur min est la longueur du nom de la colonne
+                    } 
+                    while (reader.Read()) // Lecture de chaque ligne
+                    {
+                        string[] ligneActuelle = new string[reader.FieldCount];
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            string valeur = reader.IsDBNull(i) ? "NULL" : reader[i].ToString();
+                            ligneActuelle[i] = valeur;
+                            if (valeur.Length > largeursColonnes[i]) // Mise à jour de la largeur max si nécessaire
+                            {
+                                largeursColonnes[i] = valeur.Length;
+                            }
+                        }
+                        toutesLesLignes.Add(ligneActuelle);
+                    }
+                    reader.Close();
+                    string CreerSeparateur() // Fonction locale pour créer une ligne séparatrice horizontale
+                    {
+                        string sep = "+";
+                        for (int i = 0; i < largeursColonnes.Length; i++)
+                        {
+                            sep += new string('-', largeursColonnes[i] + 2) + "+";
+                        }
+                        return sep;
+                    }
+                    string ligneSeparation = CreerSeparateur();
+                    Console.WriteLine(ligneSeparation); // Afficher les en-têtes
+                    Console.Write("|");
+                    for (int i = 0; i < entetes.Length; i++)
+                    {
+                        Console.Write(" " + entetes[i].PadRight(largeursColonnes[i]) + " |"); // PadRight ajoute des espaces pour atteindre la largeur calculée
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine(ligneSeparation);
+                    foreach (string[] ligne in toutesLesLignes) // Afficher les données stockées
+                    {
+                        Console.Write("|");
+                        for (int i = 0; i < ligne.Length; i++)
+                        {
+                            Console.Write(" " + ligne[i].PadRight(largeursColonnes[i]) + " |");
+                        }
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine(ligneSeparation);
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine("Erreur SQL : " + ex.Message);
+                }
+            }
+        }
         #endregion
 
         #region Non-Queries génériques
@@ -860,7 +932,7 @@ namespace BDD_Salle_de_Sport
         }
         #endregion
 
-        #region Cours
+        #region Cours (pas fini)
         static void InterfaceAjouterCours(MySqlConnection connection) // A FINIR
         {
 
@@ -885,15 +957,15 @@ namespace BDD_Salle_de_Sport
             ExecuteNonQuery(connection, sqlUpdate);
             Console.WriteLine("Le cours a été modifié.");
         }
-        static void InterfaceAffichageCours(MySqlConnection connection) // A tester
+        static void InterfaceAffichageCours(MySqlConnection connection) // FINI (c'est magnifique)
         {
-            Console.WriteLine("=== LISTE DES COURS (ID | Cours | Coach | Salle | Date | Durée | Niv. | Intensité) ===");
-            string sqlCours = "SELECT C.id_cours, C.nom, Coach.nom, Salle.nom, C.horaire, " +
-                              "C.duree_minutes, C.niveau_difficulte, C.intensite " +
+            Console.WriteLine("=== LISTE DES COURS ===");
+            string sqlCours = "SELECT C.id_cours AS id, C.nom AS cours, Coach.nom AS coach, Salle.nom AS salle, C.horaire, " +
+                              "C.duree_minutes AS durée, C.niveau_difficulte AS difficulté, C.intensite " +
                               "FROM Cours C " +
                               "JOIN Coach ON C.id_coach = Coach.id_coach " +
                               "JOIN Salle ON C.id_salle = Salle.id_salle ";
-            ExecuteQueryAfficheTout(connection, sqlCours);
+            ExecuteQueryAfficheToutAuto(connection, sqlCours);
         }
         #endregion
 
