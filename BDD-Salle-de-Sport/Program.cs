@@ -30,17 +30,16 @@ namespace BDD_Salle_de_Sport
             MySqlConnection connection = new MySqlConnection(connectionString)
             {
                 try
-                {
-                    connection.Open(); // Ouvre la connexion
-                    Console.WriteLine("Connection to database established successfully.");
-                    InterfaceUtilisateur(connection);
-                    return connection;
-                }
-                catch (MySqlException ex)
-                {
-                    Console.WriteLine("Error connecting to database: " + ex.Message);
-                    return null;
-                }
+            {
+                connection.Open(); // Ouvre la connexion
+                Console.WriteLine("Connection to database established successfully.");
+                InterfaceUtilisateur(connection);
+                return connection;
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine("Error connecting to database: " + ex.Message);
+                return null;
             }
         }
         static void ExecuteQuery(MySqlConnection connection, string query)
@@ -65,6 +64,33 @@ namespace BDD_Salle_de_Sport
         static void InterfaceUtilisateur(MySqlConnection connection)
         {
             ExecuteQuery(connection, "SELECT nom FROM Salle"); // Exemple de requête pour récupérer les noms des salles
+        }
+    }
+    public static MySqlConnection ConnecterEnTantQueMembre()
+    {
+        // ... (Chaîne de connexion avec user=app_membre_client et password=Membre123) ...
+
+        MySqlConnection connection = new MySqlConnection(connectionString);
+
+        try
+        {
+            connection.Open();
+
+            // --- NOUVELLE ÉTAPE CRUCIALE ---
+            // Exécuter la commande pour ACTIVER les droits du rôle
+            using (MySqlCommand cmd = new MySqlCommand("SET ROLE 'Membre_Role'", connection))
+            {
+                cmd.ExecuteNonQuery();
+            }
+            // -------------------------------
+
+            Console.WriteLine("Connexion Membre établie et rôle activé.");
+            return connection;
+        }
+        catch (MySqlException ex)
+        {
+            Console.WriteLine("Erreur de connexion : " + ex.Message);
+            return null;
         }
     }
 }
