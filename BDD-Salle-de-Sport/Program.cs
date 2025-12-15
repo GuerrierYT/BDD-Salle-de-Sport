@@ -559,7 +559,7 @@ namespace BDD_Salle_de_Sport
             }
             return false;
         }
-        static int InterfaceGestionMembres(MySqlConnection Connection, string espace) // Pour les admins
+        static bool InterfaceGestionMembres(MySqlConnection Connection, string espace) // Pour les admins
         {
             int rep = 0;
             bool termine = false;
@@ -593,7 +593,9 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 2: // Supprimer un membre
-                    
+                    Console.WriteLine("Entrez l'ID du membre à supprimer : ");
+                    int id = SaisirNombrePositif();
+                    SupprimerMembre(Connection, id);
                     break;
 
                 case 3: // Modifier un membre
@@ -775,7 +777,9 @@ namespace BDD_Salle_de_Sport
                     InterfaceAjoutMembre(Connection, espace);
                     break;
                 case 2: // Supprimer une inscription
-
+                    Console.WriteLine("Entrez l'ID du membre à supprimer : ");
+                    int id = SaisirNombrePositif();
+                    SupprimerMembre(Connection, id);
                     break;
                 case 3: // Modifier une inscription
                     break;
