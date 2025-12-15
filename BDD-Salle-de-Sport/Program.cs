@@ -33,8 +33,8 @@ namespace BDD_Salle_de_Sport
 
         #region Requêtes SQL
 
-        #region Exécution requêtes
-        static void ExecuteQuery(MySqlConnection connection, string query) // Pour les requêtes qui retournent plusieurs lignes
+        #region Queries génériques
+        static void ExecuteQuery(MySqlConnection connection, string query) // Pour les requêtes qui retournent plusieurs lignes (1 colonne)
         {
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
@@ -117,21 +117,6 @@ namespace BDD_Salle_de_Sport
                 }
             }
         }
-        static void ExecuteNonQuery(MySqlConnection connection, string query) // Pour les requêtes qui ne retournent rien (INSERT, UPDATE, DELETE)
-        {
-            using (MySqlCommand command = new MySqlCommand(query, connection))
-            {
-                try
-                {
-                    command.ExecuteNonQuery();
-                }
-                catch (MySqlException ex)
-                {
-                    Console.WriteLine("Error executing non-query: " + ex.Message);
-                }
-            }
-        }
-
         static void ExecuteQueryAfficheTout(MySqlConnection connection, string query) 
         {
             using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -157,7 +142,23 @@ namespace BDD_Salle_de_Sport
                 }
             }
         } //Pour les requêtes qui retournent plusieurs lignes et colonnes
+        #endregion
 
+        #region Non-Queries génériques
+        static void ExecuteNonQuery(MySqlConnection connection, string query) // Pour les requêtes qui ne retournent rien (INSERT, UPDATE, DELETE)
+        {
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine("Error executing non-query: " + ex.Message);
+                }
+            }
+        }
         #endregion
 
         #region Changement attributs membre
@@ -277,7 +278,10 @@ namespace BDD_Salle_de_Sport
         }
 
         #endregion
-
+        static void SupprimerMembre(MySqlConnection connection, int idMembre) {
+            string query = "DELETE FROM Membre WHERE id_membre = " + idMembre;
+            ExecuteNonQuery(connection, query);
+        }
         #endregion
 
         #region Gestion Connexion Utilisateur (terminé)
@@ -588,6 +592,7 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 2: // Supprimer un membre
+                    
                     break;
 
                 case 3: // Modifier un membre
