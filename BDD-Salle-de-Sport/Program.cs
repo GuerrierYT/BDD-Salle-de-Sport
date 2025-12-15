@@ -258,7 +258,7 @@ namespace BDD_Salle_de_Sport
 
         #endregion
 
-        #region Gestion Connexion Utilisateur
+        #region Gestion Connexion Utilisateur (terminé)
         static bool UtilisateurEstAdmin(MySqlConnection connection, string login, string password) // Vérifie si l'utilisateur est un admin
         {
             return ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Administrateur WHERE login = '{login}' AND password = '{password}'") > 0;
