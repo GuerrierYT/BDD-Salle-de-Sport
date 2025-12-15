@@ -318,6 +318,11 @@ namespace BDD_Salle_de_Sport
                 RemplirInfosMembre(connection, login, membre);
                 Console.WriteLine($"Bienvenue {membre.NomComplet} !");
                 Console.WriteLine(membre.toString());
+                bool stop = false;
+                while (!stop)
+                {
+                    InterfaceMembre(connection, espace, membre);
+                }
 
             }
             else
@@ -629,7 +634,7 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #region Interfaces Membres
-        static int InterfaceMembre(MySqlConnection Connection, string espace, ref Membre membre) //Pour les membres
+        static bool InterfaceMembre(MySqlConnection Connection, string espace, Membre membre) //Pour les membres
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -640,7 +645,7 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine(espace + "5) Se désinscrire d'un cours.");
             Console.WriteLine(espace + "6) Voir son historique.");
             Console.WriteLine(espace + "7) Quitter le programme.");
-
+            bool termine = false;
             do
             {
                 Console.WriteLine("\nVotre choix : ");
@@ -659,7 +664,6 @@ namespace BDD_Salle_de_Sport
             {
 
                 case 1: //Voir mes informations
-                    Console.Clear();
                     Console.WriteLine("========= MON PROFIL =========");
                     Console.WriteLine(membre.toString());
                     Console.WriteLine("==============================");
@@ -668,7 +672,10 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 2: // Modifier mes informations
-                    Console.Clear();
+                    ModifierSesInfos(Connection, espace, membre);
+                    break;
+
+                case 3: // Voir les cours disponibles
                     Console.WriteLine("--- LISTE DES COURS ---");
                     string sqlAfficher = "SELECT C.id_cours, C.nom, Coach.nom, Salle.nom, C.horaire " +
                                          "FROM Cours C " +
@@ -683,19 +690,60 @@ namespace BDD_Salle_de_Sport
                     Console.ReadKey();
                     break;
 
-                case 3: // Voir les cours disponibles
-                    break;
-
                 case 4: // S'inscrire à un cours
+                    Console.WriteLine("Entrez l'ID du cours : ");
+                    string idCours = Console.ReadLine();
+
+                    string sqlVerif = "SELECT COUNT(*) FROM Reservations WHERE id_membre=" + membre.Id + " AND id_cours=" + idCours;
+                    int dejaInscrit = ExecuteQueryInt(Connection, sqlVerif);
+
+                    if (dejaInscrit > 0)
+                    {
+                        Console.WriteLine("Vous êtes déjà inscrit !");
+                    }
+                    else
+                    {
+                        string sqlInscription = "INSERT INTO Reservations (id_membre, id_cours) VALUES (" + membre.Id + ", " + idCours + ")";
+                        try
+                        {
+                            MySqlCommand cmd = new MySqlCommand(sqlInscription, Connection);
+                            cmd.ExecuteNonQuery();
+                            Console.WriteLine("Inscription validée !");
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Erreur (ID cours invalide ?)");
+                        }
+                    }
+                    Console.ReadKey();
                     break;
 
                 case 5: // Se désinscrire d'un cours
+                    Console.WriteLine("Entrez l'ID du cours à annuler : ");
+                    string idAnnul = Console.ReadLine();
+
+                    // Suppression simple
+                    string sqlDelete = "DELETE FROM Reservations WHERE id_membre=" + membre.Id + " AND id_cours=" + idAnnul;
+
+                    MySqlCommand cmdDelete = new MySqlCommand(sqlDelete, Connection);
+                    int nbSupprime = cmdDelete.ExecuteNonQuery();
+
+                    if (nbSupprime > 0)
+                    {
+                        Console.WriteLine("Réservation annulée.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Vous n'étiez pas inscrit à ce cours.");
+                    }
+                    Console.ReadKey();
                     break;
 
                 case 6: // Voir son historique
                     break;
 
                 case 7: // Quitter le programme
+                    termine = true;
                     break;
 
                 default:
@@ -703,7 +751,7 @@ namespace BDD_Salle_de_Sport
                     rep = -1;
                     break;
             }
-            return rep;
+            return termine;
         }
         #endregion
 
