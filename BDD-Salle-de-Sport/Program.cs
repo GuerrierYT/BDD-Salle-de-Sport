@@ -795,7 +795,7 @@ namespace BDD_Salle_de_Sport
             return true;
         }
 
-        static int SaisirNombrePositif()    //Utiliser un Console.WriteLine avant !!
+        static int SaisirNombrePositif()
         {
             int rep = -1;
             do
