@@ -32,6 +32,7 @@ namespace BDD_Salle_de_Sport
                 return null;
             }
         }
+
         #region Requêtes SQL
         static void ExecuteQuery(MySqlConnection connection, string query) // Pour les requêtes qui retournent plusieurs lignes
         {
@@ -69,6 +70,7 @@ namespace BDD_Salle_de_Sport
             }
         }
         #endregion
+
         #region Gestion Connexion Utilisateur
         static bool UtilisateurEstAdmin(MySqlConnection connection, string login, string password) // Vérifie si l'utilisateur est un admin
         {
