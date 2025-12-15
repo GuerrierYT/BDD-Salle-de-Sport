@@ -390,8 +390,9 @@ namespace BDD_Salle_de_Sport
             string adresse = Console.ReadLine();
             string motDePasse = SaisirMotdePasse(espace);
 
+            // Créer le membre
 
-            // À implémenter : Enregistrement du nouveau membre dans la base de données
+            Console.WriteLine("Votre demande d'inscription a été envoyée. Veuillez attendre qu'un administrateur valide votre compte.");
         }
         #region Interfaces Admins
         static int InterfaceAdminPrincipal(MySqlConnection Connection, string espace)
