@@ -5,11 +5,10 @@ namespace BDD_Salle_de_Sport
 {
     internal class Program
     {
-        #region
         static void Main(string[] args)
         {
             MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données
-            connection = ConnexionUtilisateur(connection);
+            connection = ConnexionUtilisateur(connection); // Gère la connexion utilisateur (admin/membre)
 
             if (connection != null) // Vérifie si la connexion a été établie avant de la fermer
             {
@@ -18,7 +17,6 @@ namespace BDD_Salle_de_Sport
             Console.ReadKey();
         }
 
-        #endregion
 
 
         static MySqlConnection ConnectToDatabase() // Connexion en tant que root pour vérifier les identifiants
@@ -37,6 +35,7 @@ namespace BDD_Salle_de_Sport
                 return null;
             }
         }
+        #region Requêtes SQL
         static void ExecuteQuery(MySqlConnection connection, string query) // Pour les requêtes qui retournent plusieurs lignes
         {
             using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -72,6 +71,8 @@ namespace BDD_Salle_de_Sport
                 }
             }
         }
+        #endregion
+        #region Gestion Connexion Utilisateur
         static bool UtilisateurEstAdmin(MySqlConnection connection, string login, string password) // Vérifie si l'utilisateur est un admin
         {
             return ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Administrateur WHERE login = '{login}' AND password = '{password}'") > 0;
@@ -116,6 +117,7 @@ namespace BDD_Salle_de_Sport
 
             return connection;
         }
+        #endregion
         static void InterfaceUtilisateur(MySqlConnection connection)
         {
             ExecuteQuery(connection, "SELECT nom FROM Salle"); // Exemple de requête pour récupérer les noms des salles
