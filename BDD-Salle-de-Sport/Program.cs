@@ -562,6 +562,7 @@ namespace BDD_Salle_de_Sport
         static int InterfaceGestionMembres(MySqlConnection Connection, string espace) // Pour les admins
         {
             int rep = 0;
+            bool termine = false;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
             Console.WriteLine(espace + "1) Ajouter un membre.");
             Console.WriteLine(espace + "2) Supprimer un membre.");
@@ -604,20 +605,49 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 4: // Rechercher un membre
+                    Console.WriteLine("=== RECHERCHE PAR EMAIL ===");
+                    Console.Write("Entrez l'email du membre : ");
+                    string mailRecherche = Console.ReadLine();
+
+                    // On protège juste l'apostrophe pour éviter le crash SQL
+                    mailRecherche = mailRecherche.Replace("'", "''");
+
+                    // La requête demandée
+                    string sqlRecherche = "SELECT * FROM Membre WHERE adresse_mail = '" + mailRecherche + "'";
+
+                    Console.WriteLine("\n--- RÉSULTAT ---");
+                    // Si l'email existe, ça affiche la ligne. Sinon, ça n'affiche rien.
+                    ExecuteQueryAfficheTout(Connection, sqlRecherche);
+
+                    Console.WriteLine("\nAppuyez sur une touche...");
+                    Console.ReadKey();
+                    break;
                     break;
 
                 case 5: // Voir la liste des membres
+                    Console.WriteLine("=== LISTE DES MEMBRES VALIDÉS (ID | Nom | Prénom | Email) ===");
+
+                    string sqlMembres = "SELECT id_membre, nom, prenom, adresse_mail " +
+                                        "FROM Membre " +
+                                        "WHERE admis = 1";
+
+                    ExecuteQueryAfficheTout(Connection, sqlMembres);
+
+                    Console.WriteLine("\nAppuyez sur une touche...");
+                    Console.ReadKey();
                     break;
 
+
                 case 6: // Retour au menu précédent
+                    termine = true;
                     break;
 
                 default:
                     Console.WriteLine("Choix invalide.");
-                    rep = -1;
+                    termine = true;
                     break;
             }
-            return rep;
+            return termine;
         }
         static int InterfaceGestionCoachs(MySqlConnection Connection, string espace)
         {
@@ -1199,7 +1229,7 @@ namespace BDD_Salle_de_Sport
             return tel;
         }
 
-        int SaisirNombrePositif()
+        static int SaisirNombrePositif()
         {
             int rep = -1;
             do
