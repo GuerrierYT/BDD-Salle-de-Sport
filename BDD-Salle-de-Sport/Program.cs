@@ -488,11 +488,11 @@ namespace BDD_Salle_de_Sport
         #endregion 
 
         #region Interfaces Admins
-        static bool InterfaceAdminPrincipal(MySqlConnection Connection, string espace)
+        static bool InterfaceAdminPrincipal(MySqlConnection Connection, string espace) // FINI
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
-            Console.WriteLine(espace + "1) Gérer les membres.");//FINI
+            Console.WriteLine(espace + "1) Gérer les membres.");
             Console.WriteLine(espace + "2) Gérer les coachs.");
             Console.WriteLine(espace + "3) Gérer les cours.");
             Console.WriteLine(espace + "4) Gérer les inscriptions.");
@@ -534,7 +534,7 @@ namespace BDD_Salle_de_Sport
             }
             return false;
         }
-        static bool InterfaceAdminSecondaire(MySqlConnection Connection, string espace)
+        static bool InterfaceAdminSecondaire(MySqlConnection Connection, string espace) // FINI
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
