@@ -387,10 +387,8 @@ namespace BDD_Salle_de_Sport
             string telephone = Console.ReadLine();
             Console.WriteLine(espace + "Veuillez entrer votre adresse :");
             string adresse = Console.ReadLine();
-            Console.WriteLine(espace + "Veuillez entrer votre mot de passe :");
-            string motDePasse = Console.ReadLine();
-            Console.WriteLine(espace + "Veuillez confirmer votre mot de passe :");
-            string confirmationMotDePasse = Console.ReadLine();
+            string motDePasse = SaisirMotdePasse(espace);
+
 
             // À implémenter : Enregistrement du nouveau membre dans la base de données
         }
@@ -701,7 +699,7 @@ namespace BDD_Salle_de_Sport
             {
 
                 case 1: //Voir mes informations
-                    
+
                     break;
 
                 case 2: //changer prenom
@@ -803,16 +801,19 @@ namespace BDD_Salle_de_Sport
             while (!valide);
             return mot;
         }
-        static bool EstMotValide(string mot)
+        static bool EstMotValide(string mot) // Vérifie si le mot est valide (pas de caractères spéciaux, seulement des lettres )
         {
-             if (!mot.IsLetter())
+            foreach (char c in mot)
+            {
+                if (!char.IsLetter(c) && c != '-' && c != ' ')
                 {
                     return false;
                 }
+            }
             return true;
         }
 
-        static int SaisirNombrePositif()
+        static int SaisirNombrePositif() // Saisie d'un nombre positif
         {
             int rep = -1;
             do
@@ -830,6 +831,20 @@ namespace BDD_Salle_de_Sport
             while (rep < 0);
             return rep;
         }
+        static string SaisirMotdePasse(string espace) // Saisie et confirmation du mot de passe
+        {
+            string motDePasse;
+            string confirmationMotDePasse;
+            do
+            {
+                Console.WriteLine(espace + "Veuillez entrer votre mot de passe :");
+                motDePasse = Console.ReadLine();
+                Console.WriteLine(espace + "Veuillez confirmer votre mot de passe :");
+                confirmationMotDePasse = Console.ReadLine();
+            }
+            while (motDePasse != confirmationMotDePasse && motDePasse.Length <= 50);
+            return motDePasse;
+        } // 
         #endregion
     }
 }
