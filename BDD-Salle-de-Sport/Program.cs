@@ -27,7 +27,7 @@ namespace BDD_Salle_de_Sport
             Console.Write("Password : ");
             password = Console.ReadLine();
             string connectionString = "server=localhost;user=" + login + ";database=GestionSalleSport;port=3306;password=" + password;
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            MySqlConnection connection = new MySqlConnection(connectionString)
             {
                 try
                 {
