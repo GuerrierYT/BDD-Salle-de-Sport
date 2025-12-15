@@ -610,8 +610,8 @@ namespace BDD_Salle_de_Sport
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
-            Console.WriteLine(espace + "1) Voir mes informations.");
-            Console.WriteLine(espace + "2) Modifier mes informations.");
+            Console.WriteLine(espace + "1) Voir mes informations.");    //FINI
+            Console.WriteLine(espace + "2) Modifier mes informations.");//FINI
             Console.WriteLine(espace + "3) Voir les cours disponibles.");
             Console.WriteLine(espace + "4) S'inscrire à un cours.");
             Console.WriteLine(espace + "5) Se désinscrire d'un cours.");
@@ -636,6 +636,7 @@ namespace BDD_Salle_de_Sport
             {
 
                 case 1: //Voir mes informations
+                    Console.Clear();
                     Console.WriteLine("========= MON PROFIL =========");
                     Console.WriteLine(membre.toString());
                     Console.WriteLine("==============================");
@@ -644,6 +645,19 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 2: // Modifier mes informations
+                    Console.Clear();
+                    Console.WriteLine("--- LISTE DES COURS ---");
+                    string sqlAfficher = "SELECT C.id_cours, C.nom, Coach.nom, Salle.nom, C.horaire " +
+                                         "FROM Cours C " +
+                                         "JOIN Coach ON C.id_coach = Coach.id_coach " +
+                                         "JOIN Salle ON C.id_salle = Salle.id_salle " +
+                                         "WHERE C.horaire > NOW()";
+
+                    // On utilise ta fonction existante pour afficher
+                    ExecuteQuery(Connection, sqlAfficher);
+
+                    Console.WriteLine("\nAppuyez sur une touche...");
+                    Console.ReadKey();
                     break;
 
                 case 3: // Voir les cours disponibles
@@ -858,7 +872,7 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #region Saisie sécu /!\ Mettre des Console.WriteLine avant
-        string SaisirString(int tailleMax)
+        static string SaisirString(int tailleMax)
         {
             string saisie = "";
             bool valide = false;
@@ -883,7 +897,7 @@ namespace BDD_Salle_de_Sport
             return saisie.Trim().Replace("'", " ");
         }
 
-        string SaisirTel()
+        static string SaisirTel()
         {
             string tel;
             bool valide = false;
