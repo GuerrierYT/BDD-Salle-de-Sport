@@ -559,7 +559,7 @@ namespace BDD_Salle_de_Sport
             }
             return false;
         }
-        static int InterfaceGestionMembres(MySqlConnection Connection, string espace) // Pour les admins
+        static bool InterfaceGestionMembres(MySqlConnection Connection, string espace) // Pour les admins
         {
             int rep = 0;
             bool termine = false;
@@ -605,23 +605,16 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 4: // Rechercher un membre
-                    Console.WriteLine("=== RECHERCHE PAR EMAIL ===");
                     Console.Write("Entrez l'email du membre : ");
                     string mailRecherche = Console.ReadLine();
 
-                    // On protège juste l'apostrophe pour éviter le crash SQL
-                    mailRecherche = mailRecherche.Replace("'", "''");
-
-                    // La requête demandée
+                    mailRecherche = mailRecherche.Replace("'", ""); //Sinon ça fait crash la requête SQL
                     string sqlRecherche = "SELECT * FROM Membre WHERE adresse_mail = '" + mailRecherche + "'";
-
-                    Console.WriteLine("\n--- RÉSULTAT ---");
-                    // Si l'email existe, ça affiche la ligne. Sinon, ça n'affiche rien.
+                    Console.WriteLine($"\nVoici les informations sur {mailRecherche} :");
                     ExecuteQueryAfficheTout(Connection, sqlRecherche);
 
                     Console.WriteLine("\nAppuyez sur une touche...");
                     Console.ReadKey();
-                    break;
                     break;
 
                 case 5: // Voir la liste des membres
