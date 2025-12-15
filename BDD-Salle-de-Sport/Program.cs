@@ -119,6 +119,7 @@ namespace BDD_Salle_de_Sport
             }
         }
         #endregion
+
         #region Gestion Connexion Utilisateur
         static bool UtilisateurEstAdmin(MySqlConnection connection, string login, string password) // Vérifie si l'utilisateur est un admin
         {
@@ -302,8 +303,7 @@ namespace BDD_Salle_de_Sport
             }
             return rep;
         }
-
-        static int InterfaceGestionMembres(MySqlConnection Connection, string espace)
+        static int InterfaceGestionMembres(MySqlConnection Connection, string espace) // Pour les admins
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -355,8 +355,7 @@ namespace BDD_Salle_de_Sport
                     break;
             }
             return rep;
-        }   // Pour les admins
-
+        }
         static int InterfaceGestionCoachs(MySqlConnection Connection, string espace)
         {
             int rep = 0;
