@@ -485,9 +485,10 @@ namespace BDD_Salle_de_Sport
 
             Console.WriteLine("Votre demande d'inscription a été envoyée. Veuillez attendre qu'un administrateur valide votre compte.");
         }
-        #endregion 
+        #endregion
 
         #region Interfaces Admins
+        #region Interfaces principales Admins
         static bool InterfaceAdminPrincipal(MySqlConnection Connection, string espace) // FINI
         {
             int rep = 0;
@@ -586,6 +587,9 @@ namespace BDD_Salle_de_Sport
             }
             return false;
         }
+        #endregion
+
+        #region Sous-interfaces Admins
         static bool InterfaceGestionMembres(MySqlConnection Connection, string espace) // FINI
         {
             int rep = 0;
@@ -819,6 +823,9 @@ namespace BDD_Salle_de_Sport
                     break;
             }
         }
+        #endregion
+
+        #region Sous-sous-interfaces Admins
         static void InterfaceAjoutMembre(MySqlConnection connection, string espace) // FINI
         {
             Console.WriteLine("\nInscription d'un nouveau membre :\n");
@@ -848,6 +855,7 @@ namespace BDD_Salle_de_Sport
                                        "WHERE admis = 0";
             ExecuteQueryAfficheTout(connection, sqlFutursMembres);
         }
+        #endregion
         #endregion
 
         #region Interfaces Membres (terminé)
