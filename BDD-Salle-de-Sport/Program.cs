@@ -198,7 +198,9 @@ namespace BDD_Salle_de_Sport
             }
         }
         #endregion
+
         #region Interface
+        #region Interfaces Admins
         static int InterfaceAdminPrincipal(MySqlConnection Connection, string espace)
         {
             int rep = 0;
@@ -408,9 +410,10 @@ namespace BDD_Salle_de_Sport
             }
             return rep;
         }
-       
 
+        #endregion
 
+        #region Interfaces Membres
         static int InterfaceMembre(MySqlConnection Connection, string espace, ref Membre membre) //Pour les membres
         {
             int rep = 0;
@@ -470,6 +473,9 @@ namespace BDD_Salle_de_Sport
             return rep;
         }
         #endregion
+
+        #endregion
+
         #region Connexions Membres/Admins
         static MySqlConnection ConnecterEnTantQueMembre() // Connexion sécurisée pour les membres
         {
