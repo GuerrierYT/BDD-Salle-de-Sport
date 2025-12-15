@@ -164,15 +164,12 @@ namespace BDD_Salle_de_Sport
             while (rep < 0 || rep > 6);
             switch (rep)
             {
-
                 case 1: //Gérer les membres*
                     InterfaceGestionMembres(Connection, espace);
                     break;
-
                 case 2: // Gérer les coachs
                     InterfaceGestionCoachs(Connection, espace);
                     break;
-
                 case 3: // Gérer les cours
                     break;
 
@@ -192,7 +189,6 @@ namespace BDD_Salle_de_Sport
             }
             return rep;
         }
-
         static int InterfaceAdminSecondaire(MySqlConnection Connection, string espace)
         {
             int rep = 0;
@@ -202,6 +198,7 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine(espace + "3) Gérer les cours.");
             Console.WriteLine(espace + "4) Gérer les inscriptions.");
             Console.WriteLine(espace + "5) Quitter le programme.");
+
             do
             {
                 Console.WriteLine("\nVotre choix : ");
@@ -218,7 +215,6 @@ namespace BDD_Salle_de_Sport
             while (rep < 0 || rep > 5);
             switch (rep)
             {
-
                 case 1: //Gérer les membres
                     InterfaceGestionMembres(Connection, espace);
                     break;
@@ -409,12 +405,7 @@ namespace BDD_Salle_de_Sport
             }
             return rep;
         }
-
-       
-
         #endregion
-
-
         #region Connexions Membres/Admins
         static MySqlConnection ConnecterEnTantQueMembre() // Connexion sécurisée pour les membres
         {
@@ -437,7 +428,6 @@ namespace BDD_Salle_de_Sport
                 return null; // Retourne null si ça a échoué
             }
         }
-
         public static MySqlConnection ConnecterEnTantQueAdmin(bool estPrincipal) // Connexion sécurisée pour les administrateurs
         {
             string connectionString = "";
