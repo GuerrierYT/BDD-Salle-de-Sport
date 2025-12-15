@@ -9,6 +9,7 @@ namespace BDD_Salle_de_Sport
 {
     internal class Program
     {
+        #region
         static void Main(string[] args)
         {
             MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données
@@ -22,6 +23,10 @@ namespace BDD_Salle_de_Sport
             }
             Console.ReadKey();
         }
+
+        #endregion
+
+
         static MySqlConnection ConnectToDatabase()
         {
             string connectionString = "server=localhost;user=root;database=GestionSalleSport;port=3306;password=root";
