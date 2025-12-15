@@ -8,9 +8,10 @@ namespace BDD_Salle_de_Sport
         static void Main(string[] args)
         {
             string espace = "                                        ";
-            MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données
-            Membre membre = new Membre();
-            connection = ConnexionUtilisateur(connection, ref membre); // Gère la connexion utilisateur (admin/membre)
+
+            MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données en tant que root
+            Membre membre = new Membre(); // Objet membre pour stocker les infos du membre connecté
+            connection = ConnexionUtilisateur(connection, ref membre, espace); // Gère la connexion utilisateur (admin/membre)
 
             if (connection != null) // Vérifie si la connexion a été établie avant de la fermer
             {
@@ -245,13 +246,29 @@ namespace BDD_Salle_de_Sport
         }
         static bool UtilisateurEstMembre(MySqlConnection connection, string login, string password) // Vérifie si l'utilisateur est un membre
         {
-            return ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Membre WHERE adresse_mail = '{login}' AND mot_de_passe = '{password}'") > 0;
+            if (ExecuteQueryInt(connection, $"SELECT COUNT(*) FROM Membre WHERE adresse_mail = '{login}' AND mot_de_passe = '{password}'") > 0)
+            {
+                if (ExecuteQueryBool(connection, $"SELECT admis FROM Membre WHERE adresse_mail = '{login}' AND mot_de_passe = '{password}'"))
+                {
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Votre compte n'a pas encore été admis par un administrateur.");
+                    Console.WriteLine("Veuillez attendre qu'un administrateur accepte votre demande.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Compte non trouvé !");
+            }
+            return false;
         }
         static bool UtilisateurEstAdminPrincipal(MySqlConnection connection, string login, string password) // Vérifie si l'admin est principal
         {
             return ExecuteQueryString(connection, $"SELECT role FROM Administrateur WHERE login = '{login}' AND password = '{password}'") == "Principal";
         }
-        static MySqlConnection ConnexionUtilisateur(MySqlConnection connection, ref Membre membre) // Gère la connexion utilisateur
+        static MySqlConnection ConnexionUtilisateur(MySqlConnection connection, ref Membre membre, string espace) // Gère la connexion utilisateur
         {
             string login = "";
             string password = "";
@@ -283,8 +300,8 @@ namespace BDD_Salle_de_Sport
             }
             else
             {
-                Console.WriteLine("Compte inexistant.");
                 Console.WriteLine("Créer un compte ou réessayer.");
+                InterfaceConnexionUtilisateur( connection,  login,  password, espace, membre);
             }
 
             return connection;
@@ -319,6 +336,44 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #region Interface
+        static void InterfaceConnexionUtilisateur(MySqlConnection connection, string login, string password, string espace, Membre membre)
+        {
+            int rep = 0;
+            Console.WriteLine("\nQue souhaitez-vous faire ?\n");
+            Console.WriteLine(espace + "1) Réessayer de se connecter.");
+            Console.WriteLine(espace + "2) S'inscrire.");
+            Console.WriteLine(espace + "3) Quitter le programme.");
+            do
+            {
+                Console.WriteLine("\nVotre choix : ");
+                string choix = Console.ReadLine();
+                try
+                {
+                    rep = Convert.ToInt32(choix);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Veuillez entrer un nombre valide.");
+                }
+            }
+            while (rep < 0 || rep > 3);
+            switch (rep)
+            {
+                case 1: // Réessayer de se connecter
+                    ConnexionUtilisateur(connection,ref membre, espace);
+                    break;
+                case 2: // S'inscrire
+
+                    break;
+                case 3: // Quitter le programme
+                    break;
+
+                default:
+                    Console.WriteLine("Choix invalide.");
+                    rep = -1;
+                    break;
+            }
+        }
         #region Interfaces Admins
         static int InterfaceAdminPrincipal(MySqlConnection Connection, string espace)
         {
