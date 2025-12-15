@@ -124,29 +124,23 @@ namespace BDD_Salle_de_Sport
 
         public static MySqlConnection ConnecterEnTantQueMembre()
         {
-            string connectionString = "server=localhost;user=app_membre_client;database=GestionSalleSport;port=3306;password=Membre";
+            // On utilise le login restreint "membre_client"
+            string connectionString = "server=localhost;user=membre_client;database=GestionSalleSport;port=3306;password=Membre";
 
             MySqlConnection connection = new MySqlConnection(connectionString);
 
             try
             {
                 connection.Open();
+                // PLUS BESOIN DU BLOC "SET ROLE" ICI car on a donné les droits en direct !
 
-                // --- NOUVELLE ÉTAPE CRUCIALE ---
-                // Exécuter la commande pour ACTIVER les droits du rôle
-                using (MySqlCommand cmd = new MySqlCommand("SET ROLE 'Membre_Role'", connection))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-                // -------------------------------
-
-                Console.WriteLine("Connexion Membre établie et rôle activé.");
-                return connection;
+                Console.WriteLine("Connexion sécurisée 'Membre' établie.");
+                return connection; // Retourne l'objet connexion ouvert
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine("Erreur de connexion : " + ex.Message);
-                return null;
+                Console.WriteLine("Erreur critique : " + ex.Message);
+                return null; // Retourne null si ça a échoué
             }
         }
     }
