@@ -701,22 +701,22 @@ namespace BDD_Salle_de_Sport
             {
 
                 case 1: //Voir mes informations
-
+                    
                     break;
 
-                case 2: // Modifier mes informations
+                case 2: //changer prenom
                     break;
 
-                case 3: // Voir les cours disponibles
+                case 3: // changer Adresse
                     break;
 
-                case 4: // S'inscrire à un cours
+                case 4: // changer tel
                     break;
 
-                case 5: // Se désinscrire d'un cours
+                case 5: // changer Email
                     break;
 
-                case 6: // Voir son historique
+                case 6: // changer mdp
                     break;
 
                 case 7: // Quitter le programme
@@ -780,6 +780,58 @@ namespace BDD_Salle_de_Sport
                 Console.WriteLine("Erreur de connexion Admin : " + ex.Message);
                 return null;
             }
+        }
+        #endregion
+
+        #region Saisie sécu
+        static string SaisirMot()
+        {
+            string mot;
+            bool valide = false;
+            do
+            {
+                mot = Console.ReadLine();
+                if (!EstMotValide(mot))
+                {
+                    Console.WriteLine("Mot invalide. Veuillez réessayer. Attention à ne pas mettre de caractères spéciaux.");
+                }
+                else
+                {
+                    valide = true;
+                }
+            }
+            while (!valide);
+            return mot;
+        }
+        static bool EstMotValide(string mot)
+        {
+            foreach (char c in mot)
+            {
+                if (!string.IsLetter(c))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        static int SaisirNombrePositif()
+        {
+            int rep = -1;
+            do
+            {
+                string choix = Console.ReadLine();
+                try
+                {
+                    rep = Convert.ToInt32(choix);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Veuillez entrer un nombre valide.");
+                }
+            }
+            while (rep < 0);
+            return rep;
         }
         #endregion
     }
