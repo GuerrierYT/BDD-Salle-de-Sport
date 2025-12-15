@@ -101,7 +101,7 @@ namespace BDD_Salle_de_Sport
 
         public static MySqlConnection ConnecterEnTantQueMembre()
         {
-            // ... (Chaîne de connexion avec user=app_membre_client et password=Membre123) ...
+            string connectionString = "server=localhost;user=app_membre_client;database=GestionSalleSport;port=3306;password=Membre";
 
             MySqlConnection connection = new MySqlConnection(connectionString);
 
