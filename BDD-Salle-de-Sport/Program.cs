@@ -763,7 +763,7 @@ namespace BDD_Salle_de_Sport
         }
         #endregion
 
-        #region Saisie sécu
+        #region Saisie sécu /!\ Mettre des Console.WriteLine avant
         static string SaisirMot()
         {
             string mot;
@@ -785,13 +785,10 @@ namespace BDD_Salle_de_Sport
         }
         static bool EstMotValide(string mot)
         {
-            foreach (char c in mot)
-            {
-                if (!string.IsLetter(c))
+             if (!mot.IsLetter())
                 {
                     return false;
                 }
-            }
             return true;
         }
 
