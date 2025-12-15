@@ -465,7 +465,7 @@ namespace BDD_Salle_de_Sport
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
-            Console.WriteLine(espace + "1) Gérer les membres.");
+            Console.WriteLine(espace + "1) Gérer les membres.");//FINI
             Console.WriteLine(espace + "2) Gérer les coachs.");
             Console.WriteLine(espace + "3) Gérer les cours.");
             Console.WriteLine(espace + "4) Gérer les inscriptions.");
@@ -564,11 +564,11 @@ namespace BDD_Salle_de_Sport
             int rep = 0;
             bool termine = false;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
-            Console.WriteLine(espace + "1) Ajouter un membre.");
-            Console.WriteLine(espace + "2) Supprimer un membre.");
-            Console.WriteLine(espace + "3) Modifier un membre.");
-            Console.WriteLine(espace + "4) Rechercher un membre.");
-            Console.WriteLine(espace + "5) Voir la liste des membres.");
+            Console.WriteLine(espace + "1) Ajouter un membre.");    //FINI
+            Console.WriteLine(espace + "2) Supprimer un membre.");  //FINI
+            Console.WriteLine(espace + "3) Modifier un membre.");   //FINI
+            Console.WriteLine(espace + "4) Rechercher un membre."); //FINI
+            Console.WriteLine(espace + "5) Voir la liste des membres.");//FINI
             Console.WriteLine(espace + "6) Retour au menu précédent.");
 
             do
