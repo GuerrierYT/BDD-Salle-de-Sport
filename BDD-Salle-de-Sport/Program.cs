@@ -138,8 +138,6 @@ namespace BDD_Salle_de_Sport
         }
         #endregion
 
-
-
         #region Changement attributs membre
         static bool UpdatePrenomSimple(MySqlConnection connection, int idMembre, string nouveauPrenom)
         {
@@ -431,8 +429,7 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine(espace + "2) Gérer les coachs.");
             Console.WriteLine(espace + "3) Gérer les cours.");
             Console.WriteLine(espace + "4) Gérer les inscriptions.");
-            Console.WriteLine(espace + "5) Gérer les employés.");
-            Console.WriteLine(espace + "6) Quitter le programme.");
+            Console.WriteLine(espace + "5) Quitter le programme.");
             do
             {
                 Console.WriteLine("\nVotre choix : ");
@@ -446,27 +443,23 @@ namespace BDD_Salle_de_Sport
                     Console.WriteLine("Veuillez entrer un nombre valide.");
                 }
             }
-            while (rep < 0 || rep > 6);
+            while (rep < 0 || rep > 5);
             switch (rep)
             {
-                case 1: //Gérer les membres*
+                case 1: //Gérer les membres
                     InterfaceGestionMembres(Connection, espace);
                     break;
                 case 2: // Gérer les coachs
                     InterfaceGestionCoachs(Connection, espace);
                     break;
                 case 3: // Gérer les cours
+                    InterfaceGestionCours(Connection, espace);
                     break;
-
                 case 4: // Gérer les inscriptions
+                    InterfaceGestionInscriptions(Connection, espace);
                     break;
-
-                case 5: // Quitter le jeu
+                case 5: // Quitter le programme
                     break;
-
-                case 6: // Quitter le jeu
-                    break;
-
                 default:
                     Console.WriteLine("Choix invalide.");
                     rep = -1;
@@ -630,7 +623,95 @@ namespace BDD_Salle_de_Sport
             }
             return rep;
         }
-
+        static void InterfaceGestionCours(MySqlConnection Connection, string espace)
+        {
+            int rep = 0;
+            Console.WriteLine("\nQue souhaitez-vous faire ?\n");
+            Console.WriteLine(espace + "1) Ajouter un cours.");
+            Console.WriteLine(espace + "2) Supprimer un cours.");
+            Console.WriteLine(espace + "3) Modifier un cours.");
+            Console.WriteLine(espace + "4) Rechercher un cours.");
+            Console.WriteLine(espace + "5) Voir la liste des cours.");
+            Console.WriteLine(espace + "6) Retour au menu précédent.");
+            do
+            {
+                Console.WriteLine("\nVotre choix : ");
+                string choix = Console.ReadLine();
+                try
+                {
+                    rep = Convert.ToInt32(choix);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Veuillez entrer un nombre valide.");
+                }
+            }
+            while (rep < 0 || rep > 6);
+            switch (rep)
+            {
+                case 1: //Ajouter un cours
+                    break;
+                case 2: // Supprimer un cours
+                    break;
+                case 3: // Modifier un cours
+                    break;
+                case 4: // Rechercher un cours
+                    break;
+                case 5: // Voir la liste des cours
+                    break;
+                case 6: // Retour au menu précédent
+                    break;
+                default:
+                    Console.WriteLine("Choix invalide.");
+                    rep = -1;
+                    break;
+            }
+        }
+        static void InterfaceGestionInscriptions(MySqlConnection Connection, string espace)
+        {
+            int rep = 0;
+            Console.WriteLine("\nQue souhaitez-vous faire ?\n");
+            Console.WriteLine(espace + "1) Ajouter une inscription.");
+            Console.WriteLine(espace + "2) Supprimer une inscription.");
+            Console.WriteLine(espace + "3) Modifier une inscription.");
+            Console.WriteLine(espace + "4) Rechercher une inscription.");
+            Console.WriteLine(espace + "5) Voir la liste des inscriptions.");
+            Console.WriteLine(espace + "6) Retour au menu précédent.");
+            do
+            {
+                Console.WriteLine("\nVotre choix : ");
+                string choix = Console.ReadLine();
+                try
+                {
+                    rep = Convert.ToInt32(choix);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Veuillez entrer un nombre valide.");
+                }
+            }
+            while (rep < 0 || rep > 6);
+            switch (rep)
+            {
+                case 1: //Ajouter une inscription
+                    break;
+                case 2: // Supprimer une inscription
+                    break;
+                case 3: // Modifier une inscription
+                    break;
+                case 4: // Rechercher une inscription
+                    break;
+                case 5: // Voir la liste des inscriptions
+                    break;
+                case 6: // Retour au menu précédent
+                    break;
+                default:
+                    Console.WriteLine("Choix invalide.");
+                    rep = -1;
+                    break;
+            }
+        }
+        
         #endregion
 
         #region Interfaces Membres
