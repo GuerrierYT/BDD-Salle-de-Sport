@@ -584,18 +584,24 @@ namespace BDD_Salle_de_Sport
             {
 
                 case 1: //Ajouter un membre
+                    InterfaceAjoutMembre(Connection, espace);
                     break;
 
                 case 2: // Supprimer un membre
                     break;
 
                 case 3: // Modifier un membre
+                    Console.WriteLine("Entrez l'adresse e-mail du membre à modifier : ");
+                    string login = Console.ReadLine();
+                    Membre membre = new Membre();
+                    RemplirInfosMembre(Connection, login, membre);
+                    ModifierSesInfos(Connection, espace, membre);
                     break;
 
                 case 4: // Rechercher un membre
                     break;
 
-                case 5: // Retour au menu précédent
+                case 5: // Voir la liste des membres
                     break;
 
                 case 6: // Retour au menu précédent
