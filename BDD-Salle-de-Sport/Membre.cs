@@ -18,11 +18,22 @@ namespace BDD_Salle_de_Sport
         public DateTime DateInscription { get; set; }
         public bool Admis { get; set; }        // True = Validé, False = En attente
 
-        // Propriété calculée (n'existe pas en BDD, pratique pour l'affichage)
         public string NomComplet => $"{Prenom} {Nom}";
 
         // Constructeur vide (nécessaire pour la lecture BDD)
-        public Membre() { }
+        public Membre() 
+        {
+            this.Id = 0;
+            this.Nom = null;
+            this.Prenom = null;
+            this.Adresse = null;
+            this.Telephone = null;
+            this.Email = null;
+            this.MotDePasse = null;
+            this.DateInscription = null;
+            this.Admis = false;
+            this.NomComplet = null;
+        }
 
         // Constructeur pour faciliter l'inscription
         public Membre(string nom, string prenom, string email, string mdp)
