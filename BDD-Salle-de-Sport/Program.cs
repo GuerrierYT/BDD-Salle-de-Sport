@@ -425,7 +425,7 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #region Interface
-        #region Interface Utilisateur
+        #region Interface Utilisateur (terminé)
         static void InterfaceConnexionUtilisateur(MySqlConnection connection, string espace)
         {
             int rep = 0;
@@ -485,7 +485,7 @@ namespace BDD_Salle_de_Sport
 
             Console.WriteLine("Votre demande d'inscription a été envoyée. Veuillez attendre qu'un administrateur valide votre compte.");
         }
-        #endregion
+        #endregion 
 
         #region Interfaces Admins
         static bool InterfaceAdminPrincipal(MySqlConnection Connection, string espace)
@@ -586,7 +586,7 @@ namespace BDD_Salle_de_Sport
             }
             return false;
         }
-        static bool InterfaceGestionMembres(MySqlConnection Connection, string espace) // Pour les admins
+        static bool InterfaceGestionMembres(MySqlConnection Connection, string espace) // FINI
         {
             int rep = 0;
             bool termine = false;
@@ -671,7 +671,7 @@ namespace BDD_Salle_de_Sport
             }
             return termine;
         }
-        static int InterfaceGestionCoachs(MySqlConnection Connection, string espace)
+        static int InterfaceGestionCoachs(MySqlConnection Connection, string espace) // A FINIR
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -724,7 +724,7 @@ namespace BDD_Salle_de_Sport
             }
             return rep;
         }
-        static void InterfaceGestionCours(MySqlConnection Connection, string espace)
+        static void InterfaceGestionCours(MySqlConnection Connection, string espace) // A FINIR
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -768,7 +768,7 @@ namespace BDD_Salle_de_Sport
                     break;
             }
         }
-        static void InterfaceGestionInscriptions(MySqlConnection Connection, string espace)
+        static void InterfaceGestionInscriptions(MySqlConnection Connection, string espace) // A FINIR
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -819,7 +819,7 @@ namespace BDD_Salle_de_Sport
                     break;
             }
         }
-        static void InterfaceAjoutMembre(MySqlConnection connection, string espace)
+        static void InterfaceAjoutMembre(MySqlConnection connection, string espace) // FINI
         {
             Console.WriteLine("\nInscription d'un nouveau membre :\n");
             #region Saisie des informations
@@ -842,8 +842,8 @@ namespace BDD_Salle_de_Sport
         }
         #endregion
 
-        #region Interfaces Membres
-        static bool InterfaceMembre(MySqlConnection Connection, string espace, Membre membre) //Pour les membres
+        #region Interfaces Membres (terminé)
+        static bool InterfaceMembre(MySqlConnection Connection, string espace, Membre membre)
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
