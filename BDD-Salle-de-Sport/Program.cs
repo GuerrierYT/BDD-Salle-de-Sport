@@ -1,6 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Diagnostics;
 
 namespace BDD_Salle_de_Sport
 {
@@ -324,6 +323,22 @@ namespace BDD_Salle_de_Sport
                 FermetureConnexionUtilisateur(connection);
                 connection = ConnecterEnTantQueAdmin(estPrincipal);
                 Console.WriteLine("Bienvenue Administrateur !");
+                bool stop = false;
+                while (!stop)
+                {
+                    if (estPrincipal)
+                    {
+                        Console.WriteLine("Vous êtes connecté en tant qu'administrateur principal.");
+                        stop = InterfaceAdminPrincipal(connection, espace);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Vous êtes connecté en tant qu'administrateur secondaire.");
+                        stop = InterfaceAdminSecondaire(connection, espace);
+                    }
+                }
+
+
             }
             else if (UtilisateurEstMembre(connection, login, password))
             {
@@ -442,7 +457,7 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine("Votre demande d'inscription a été envoyée. Veuillez attendre qu'un administrateur valide votre compte.");
         }
         #region Interfaces Admins
-        static int InterfaceAdminPrincipal(MySqlConnection Connection, string espace)
+        static bool InterfaceAdminPrincipal(MySqlConnection Connection, string espace)
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -480,15 +495,15 @@ namespace BDD_Salle_de_Sport
                     InterfaceGestionInscriptions(Connection, espace);
                     break;
                 case 5: // Quitter le programme
-                    break;
+                    return true;
                 default:
                     Console.WriteLine("Choix invalide.");
                     rep = -1;
                     break;
             }
-            return rep;
+            return false;
         }
-        static int InterfaceAdminSecondaire(MySqlConnection Connection, string espace)
+        static bool InterfaceAdminSecondaire(MySqlConnection Connection, string espace)
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
@@ -523,20 +538,22 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 3: // Gérer les cours
+                    InterfaceGestionCours(Connection, espace);
                     break;
 
                 case 4: // Gérer les inscriptions
+                    InterfaceGestionInscriptions(Connection, espace);
                     break;
 
                 case 5: // Quitter le jeu
-                    break;
+                    return true;
 
                 default:
                     Console.WriteLine("Choix invalide.");
                     rep = -1;
                     break;
             }
-            return rep;
+            return false;
         }
         static int InterfaceGestionMembres(MySqlConnection Connection, string espace) // Pour les admins
         {
@@ -692,12 +709,11 @@ namespace BDD_Salle_de_Sport
         {
             int rep = 0;
             Console.WriteLine("\nQue souhaitez-vous faire ?\n");
-            Console.WriteLine(espace + "1) Ajouter une inscription.");
+            Console.WriteLine(espace + "1) Ajouter un membre.");
             Console.WriteLine(espace + "2) Supprimer une inscription.");
             Console.WriteLine(espace + "3) Modifier une inscription.");
-            Console.WriteLine(espace + "4) Rechercher une inscription.");
-            Console.WriteLine(espace + "5) Voir la liste des inscriptions.");
-            Console.WriteLine(espace + "6) Retour au menu précédent.");
+            Console.WriteLine(espace + "4) Voir la liste des inscriptions.");
+            Console.WriteLine(espace + "5) Retour au menu précédent.");
             do
             {
                 Console.WriteLine("\nVotre choix : ");
@@ -711,28 +727,47 @@ namespace BDD_Salle_de_Sport
                     Console.WriteLine("Veuillez entrer un nombre valide.");
                 }
             }
-            while (rep < 0 || rep > 6);
+            while (rep < 0 || rep > 5);
             switch (rep)
             {
-                case 1: //Ajouter une inscription
+                case 1: //Ajouter un membre
+                    InterfaceAjoutMembre(Connection, espace);
                     break;
                 case 2: // Supprimer une inscription
+
                     break;
                 case 3: // Modifier une inscription
                     break;
-                case 4: // Rechercher une inscription
+                case 4: // Voir la liste des inscriptions
                     break;
-                case 5: // Voir la liste des inscriptions
-                    break;
-                case 6: // Retour au menu précédent
+                case 5: // Retour au menu précédent
                     break;
                 default:
                     Console.WriteLine("Choix invalide.");
-                    rep = -1;
                     break;
             }
         }
-        
+        static void InterfaceAjoutMembre(MySqlConnection connection, string espace)
+        {
+            Console.WriteLine("\nInscription d'un nouveau membre :\n");
+            #region Saisie des informations
+            Console.WriteLine(espace + "Veuillez entrer le nom :");
+            string nom = Console.ReadLine();
+            Console.WriteLine(espace + "Veuillez entrer le prénom :");
+            string prenom = Console.ReadLine();
+            Console.WriteLine(espace + "Veuillez entrer le adresse e-mail :");
+            string email = Console.ReadLine();
+            Console.WriteLine(espace + "Veuillez entrer le numéro de téléphone :");
+            string telephone = Console.ReadLine();
+            Console.WriteLine(espace + "Veuillez entrer l'adresse :");
+            string adresse = Console.ReadLine();
+            string motDePasse = SaisirMotdePasse(espace);
+            #endregion
+            ExecuteNonQuery(connection, "INSERT INTO Membre (nom, prenom, adresse, numero_tel, adresse_mail, mot_de_passe, admis) " + // Ajout du nouveau membre dans la BDD
+                "VALUES ('" + nom + "', '" + prenom + "', '" + adresse + "', '" + telephone + "', '" + email + "', '" + motDePasse + "', 1);");
+
+            Console.WriteLine("Le membre a été ajouté !");
+        }
         #endregion
 
         #region Interfaces Membres
@@ -1024,10 +1059,10 @@ namespace BDD_Salle_de_Sport
                 case 6: // changer mdp
                     Console.WriteLine(espace + "Veuillez entrer votre mot de passe actuel :");
                     string mdp = Console.ReadLine();
-                    if(mdp == membre.MotDePasse)
+                    if (mdp == membre.MotDePasse)
                     {
                         string nouveauMdp = SaisirMotdePasse(espace);
-                        if(!UpdateMdpSimple(connection, membre.Id, nouveauMdp))
+                        if (!UpdateMdpSimple(connection, membre.Id, nouveauMdp))
                         {
                             Console.WriteLine("Échec de la mise à jour du mot de passe.");
                         }
