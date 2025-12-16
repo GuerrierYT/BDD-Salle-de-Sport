@@ -383,7 +383,7 @@ namespace BDD_Salle_de_Sport
 
             InterfaceAffichageInscription(connection);
 
-            Console.WriteLine("\nEntrez l'ID du membre à valider (pour l'accepter dans la salle) :");
+            Console.Write("\nEntrez l'ID du membre à valider (pour l'accepter dans la salle) :");
             int idMembre = SaisirNombrePositif();
 
             string query = "UPDATE Membre SET admis = 1 WHERE id_membre = " + idMembre;
@@ -586,17 +586,17 @@ namespace BDD_Salle_de_Sport
         }
         static void InterfaceInscriptionUtilisateur(MySqlConnection connection, string espace)
         {
-            Console.WriteLine("\nInscription d'un nouveau membre :\n");
+            Console.Write("\nInscription d'un nouveau membre :\n");
             #region Saisie des informations
-            Console.WriteLine(espace + "Veuillez entrer votre nom :");
+            Console.Write(espace + "Veuillez entrer votre nom :");
             string nom = SaisirString(50);
-            Console.WriteLine(espace + "Veuillez entrer votre prénom :");
+            Console.Write(espace + "Veuillez entrer votre prénom :");
             string prenom = SaisirString(50);
-            Console.WriteLine(espace + "Veuillez entrer votre adresse e-mail :");
+            Console.Write(espace + "Veuillez entrer votre adresse e-mail :");
             string email = SaisirString(100);
-            Console.WriteLine(espace + "Veuillez entrer votre numéro de téléphone :");
+            Console.Write(espace + "Veuillez entrer votre numéro de téléphone :");
             string telephone = SaisirTel();
-            Console.WriteLine(espace + "Veuillez entrer votre adresse :");
+            Console.Write(espace + "Veuillez entrer votre adresse :");
             string adresse = SaisirString(250);
             string motDePasse = SaisirMotdePasse(espace);
             #endregion
@@ -752,13 +752,13 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 2: // Supprimer un membre
-                    Console.WriteLine("Entrez l'ID du membre à supprimer : ");
+                    Console.Write("Entrez l'ID du membre à supprimer : ");
                     int id = SaisirNombrePositif();
                     SupprimerMembre(Connection, id);
                     break;
 
                 case 3: // Modifier un membre
-                    Console.WriteLine("Entrez l'adresse e-mail du membre à modifier : ");
+                    Console.Write("Entrez l'adresse e-mail du membre à modifier : ");
                     string login = Console.ReadLine();
                     Membre membre = new Membre();
                     RemplirInfosMembre(Connection, login, membre);
@@ -934,12 +934,12 @@ namespace BDD_Salle_de_Sport
                     InterfaceAjoutMembre(Connection, espace);
                     break;
                 case 2: // Supprimer une inscription
-                    Console.WriteLine("Entrez l'ID du membre à supprimer : ");
+                    Console.Write("Entrez l'ID du membre à supprimer : ");
                     int id = SaisirNombrePositif();
                     SupprimerMembre(Connection, id);
                     break;
                 case 3: // Modifier une inscription
-                    Console.WriteLine("Entrez l'adresse e-mail du membre à modifier : ");
+                    Console.Write("Entrez l'adresse e-mail du membre à modifier : ");
                     string login = Console.ReadLine();
                     Membre membre = new Membre();
                     RemplirInfosInscription(Connection, login, membre);
@@ -978,9 +978,8 @@ namespace BDD_Salle_de_Sport
         FROM Membre";
 
             ExecuteQueryAfficheToutAuto(connection, sqlAggregats);
-            Console.WriteLine("\n");
 
-            Console.WriteLine("--- 2. CLASSEMENT DES COACHS (Par popularité) ---");
+            Console.WriteLine("\n--- 2. CLASSEMENT DES COACHS (Par popularité) ---");
             string sqlTopCoach = @"
         SELECT Coach.nom, COUNT(Reservations.id_reservation) as Total_Inscrits
         FROM Coach
@@ -990,9 +989,8 @@ namespace BDD_Salle_de_Sport
         ORDER BY Total_Inscrits DESC";
 
             ExecuteQueryAfficheToutAuto(connection, sqlTopCoach);
-            Console.WriteLine("\n");
 
-            Console.WriteLine("--- 3. OCCUPATION DES SALLES (Right Join) ---");
+            Console.WriteLine("\n--- 3. OCCUPATION DES SALLES (Right Join) ---");
             string sqlSalles = @"
         SELECT Salle.nom AS Salle, COUNT(Cours.id_cours) AS Nb_Cours_Planifies
         FROM Cours
@@ -1000,9 +998,8 @@ namespace BDD_Salle_de_Sport
         GROUP BY Salle.nom";
 
             ExecuteQueryAfficheToutAuto(connection, sqlSalles);
-            Console.WriteLine("\n");
 
-            Console.WriteLine("--- 4. COURS VIDES / SANS SUCCÈS (Left Join) ---");
+            Console.WriteLine("\n--- 4. COURS VIDES / SANS SUCCÈS (Left Join) ---");
             string sqlCoursVides = @"
         SELECT Cours.nom, Cours.horaire
         FROM Cours
@@ -1010,9 +1007,8 @@ namespace BDD_Salle_de_Sport
         WHERE Reservations.id_reservation IS NULL AND Cours.horaire > NOW()";
 
             ExecuteQueryAfficheToutAuto(connection, sqlCoursVides);
-            Console.WriteLine("\n");
 
-            Console.WriteLine("Appuyez sur une touche pour revenir au menu...");
+            Console.WriteLine("\nAppuyez sur une touche pour revenir au menu...");
             Console.ReadKey();
         }
         static void InterfaceGestionSpecialites(MySqlConnection Connection, string espace)
@@ -1070,15 +1066,15 @@ namespace BDD_Salle_de_Sport
         {
             Console.WriteLine("\nInscription d'un nouveau membre :\n");
             #region Saisie des informations
-            Console.WriteLine(espace + "Veuillez entrer le nom :");
+            Console.Write(espace + "Veuillez entrer le nom :");
             string nom = SaisirString(50);
-            Console.WriteLine(espace + "Veuillez entrer le prénom :");
+            Console.Write(espace + "Veuillez entrer le prénom :");
             string prenom = SaisirString(50);
-            Console.WriteLine(espace + "Veuillez entrer le adresse e-mail :");
+            Console.Write(espace + "Veuillez entrer le adresse e-mail :");
             string email = SaisirString(100);
-            Console.WriteLine(espace + "Veuillez entrer le numéro de téléphone :");
+            Console.Write(espace + "Veuillez entrer le numéro de téléphone :");
             string telephone = SaisirTel();
-            Console.WriteLine(espace + "Veuillez entrer l'adresse :");
+            Console.Write(espace + "Veuillez entrer l'adresse :");
             string adresse = SaisirString(255);
             string motDePasse = SaisirMotdePasse(espace);
             #endregion
@@ -1102,15 +1098,15 @@ namespace BDD_Salle_de_Sport
         {
             Console.WriteLine("\n--- AJOUT D'UN NOUVEAU COURS ---\n");
 
-            Console.WriteLine("Nom du cours :");
+            Console.Write("Nom du cours :");
             string nom = SaisirString(100);
 
             string dateHeure = SaisirDate();
 
-            Console.WriteLine("Durée en minutes :");
+            Console.Write("Durée en minutes :");
             int duree = SaisirNombrePositif();
 
-            Console.WriteLine("Niveau de difficulté (ex: Débutant, Avancé...) entre 1 et 5:");
+            Console.Write("Niveau de difficulté (ex: Débutant, Avancé...) entre 1 et 5:");
             int diff = 0;
             do
             {
@@ -1118,20 +1114,20 @@ namespace BDD_Salle_de_Sport
             }
             while (diff < 1 || diff > 5);
 
-            Console.WriteLine("Intensité (ex: Haute, Moyenne...) :");
+            Console.Write("Intensité (ex: Haute, Moyenne...) :");
             string intens = SaisirString(50);
 
-            Console.WriteLine("Capacité max du cours (nombre de places) :");
+            Console.Write("Capacité max du cours (nombre de places) :");
             int capacite = SaisirNombrePositif();
 
             Console.WriteLine("\n--- CHOIX DU COACH ---");
             ExecuteQueryAfficheToutAuto(connection, "SELECT id_coach, nom FROM Coach");
-            Console.WriteLine("Entrez l'ID du coach pour ce cours :");
+            Console.Write("Entrez l'ID du coach pour ce cours :");
             int idCoach = SaisirNombrePositif();
 
             Console.WriteLine("\n--- CHOIX DE LA SALLE ---");
             ExecuteQueryAfficheToutAuto(connection, "SELECT id_salle, nom FROM Salle");
-            Console.WriteLine("Entrez l'ID de la salle :");
+            Console.Write("Entrez l'ID de la salle :");
             int idSalle = SaisirNombrePositif();
 
             string query = "INSERT INTO Cours (nom, horaire, duree_minutes, niveau_difficulte, intensite, capacite_cours, id_coach, id_salle) " +
@@ -1152,7 +1148,7 @@ namespace BDD_Salle_de_Sport
         }
         static void InterfaceSupprimerCours(MySqlConnection connection) //FINI
         {
-            Console.WriteLine("Entrez l'ID du cours à supprimer : ");
+            Console.Write("Entrez l'ID du cours à supprimer : ");
             int idCours = SaisirNombrePositif();
             string sqlDelete = "DELETE FROM Cours WHERE id_cours = " + idCours;
             ExecuteNonQuery(connection, sqlDelete);
@@ -1160,17 +1156,17 @@ namespace BDD_Salle_de_Sport
         }
         static void InterfaceModifierCours(MySqlConnection connection) // Modifie tout sauf le coach et la salle
         {
-            Console.WriteLine("Entrez l'ID du cours à modifier : ");
+            Console.Write("Entrez l'ID du cours à modifier : ");
             int idCours = SaisirNombrePositif();
-            Console.WriteLine("Entrez le nouveau nom du cours : ");
+            Console.Write("Entrez le nouveau nom du cours : ");
             string nouveauNom = SaisirString(100);
-            Console.WriteLine("Entrez la nouvelle durée en minutes : ");
+            Console.Write("Entrez la nouvelle durée en minutes : ");
             int nouvelleDuree = SaisirNombrePositif();
-            Console.WriteLine("Entrez la nouvelle date et heure du cours (format AAAA-MM-JJ HH:MM:SS) : ");
+            Console.Write("Entrez la nouvelle date et heure du cours (format AAAA-MM-JJ HH:MM:SS) : ");
             string nouvelleDateHeure = SaisirDate();
-            Console.WriteLine("Entrez le nouveau niveau de difficulté (entre 1 et 5) : ");
+            Console.Write("Entrez le nouveau niveau de difficulté (entre 1 et 5) : ");
             int nouveauNiveau = SaisirNombrePositif();
-            Console.WriteLine("Entrez la nouvelle intensité : ");
+            Console.Write("Entrez la nouvelle intensité : ");
             string nouvelleIntensite = SaisirString(50);
             string sqlUpdate = "UPDATE Cours SET nom = '" + nouveauNom + "', duree_minutes = " + nouvelleDuree + ", horaire = '" 
                 + nouvelleDateHeure + "', niveau_difficulte = " + nouveauNiveau + ", intensite = '" + nouvelleIntensite 
@@ -1318,10 +1314,10 @@ namespace BDD_Salle_de_Sport
         {
             Console.WriteLine("\n--- AJOUT D'UNE NOUVELLE SPÉCIALITÉ ---");
 
-            Console.WriteLine("Nom de la spécialité (ex: Yoga, Boxe...) :");
+            Console.Write("Nom de la spécialité (ex: Yoga, Boxe...) :");
             string nom = SaisirString(50);
 
-            Console.WriteLine("Description courte :");
+            Console.Write("Description courte :");
             string description = SaisirString(255);
 
             string sqlInsert = "INSERT INTO Specialite (nom, description) VALUES ('" + nom + "', '" + description + "')";
@@ -1343,14 +1339,14 @@ namespace BDD_Salle_de_Sport
             // 1. On affiche la liste pour choisir
             InterfaceAfficherSpecialites(connection);
 
-            Console.WriteLine("\nEntrez l'ID de la spécialité à modifier :");
+            Console.Write("\nEntrez l'ID de la spécialité à modifier :");
             int idSpe = SaisirNombrePositif();
 
             // 2. Saisie des nouvelles infos
-            Console.WriteLine("Nouveau nom :");
+            Console.Write("Nouveau nom :");
             string nouveauNom = SaisirString(50);
 
-            Console.WriteLine("Nouvelle description :");
+            Console.Write("Nouvelle description :");
             string nouvelleDesc = SaisirString(255);
 
             string sqlUpdate = "UPDATE Specialite SET nom = '" + nouveauNom + "', description = '" + nouvelleDesc + "' WHERE id_spe = " + idSpe;
@@ -1370,7 +1366,7 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine("\n--- SUPPRESSION D'UNE SPÉCIALITÉ ---");
             InterfaceAfficherSpecialites(connection);
 
-            Console.WriteLine("\nEntrez l'ID de la spécialité à supprimer :");
+            Console.Write("\nEntrez l'ID de la spécialité à supprimer :");
             int idSpe = SaisirNombrePositif();
 
             string sqlDelete = "DELETE FROM Specialite WHERE id_spe = " + idSpe;
@@ -1450,7 +1446,7 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 4: // S'inscrire à un cours
-                    Console.WriteLine("Entrez l'ID du cours : ");
+                    Console.Write("Entrez l'ID du cours : ");
                     string idCours = Console.ReadLine();
 
                     // 1. On vérifie d'abord si ce cours existe et on récupère sa CAPACITÉ MAX
@@ -1504,7 +1500,7 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 5: // Se désinscrire d'un cours
-                    Console.WriteLine("Entrez l'ID du cours à annuler : ");
+                    Console.Write("Entrez l'ID du cours à annuler : ");
                     string idAnnul = Console.ReadLine();
 
                     // Suppression simple
@@ -1606,7 +1602,7 @@ namespace BDD_Salle_de_Sport
             {
 
                 case 1: //changer nom
-                    Console.WriteLine(espace + "Veuillez entrer votre nouveau nom :");
+                    Console.Write(espace + "Veuillez entrer votre nouveau nom : ");
                     string nouveauNom = SaisirString(50);
                     if (UpdateNomSimple(connection, membre.Id, nouveauNom))
                     {
@@ -1620,7 +1616,7 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 2: //changer prenom
-                    Console.WriteLine(espace + "Veuillez entrer votre nouveau prénom :");
+                    Console.Write(espace + "Veuillez entrer votre nouveau prénom : ");
                     string nouveauPrenom = SaisirString(50);
                     if (UpdatePrenomSimple(connection, membre.Id, nouveauPrenom))
                     {
@@ -1634,7 +1630,7 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 3: // changer
-                    Console.WriteLine(espace + "Veuillez entrer votre nouvelle adresse :");
+                    Console.Write(espace + "Veuillez entrer votre nouvelle adresse : ");
                     string nouvelleAdresse = Console.ReadLine();
                     if (UpdateAdresseSimple(connection, membre.Id, nouvelleAdresse))
                     {
@@ -1648,7 +1644,7 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 4: // changer tel
-                    Console.WriteLine(espace + "Veuillez entrer votre nouveau numéro de téléphone :");
+                    Console.Write(espace + "Veuillez entrer votre nouveau numéro de téléphone : ");
                     string nouveauTel = SaisirTel();
                     if (UpdateTelephoneSimple(connection, membre.Id, nouveauTel))
                     {
@@ -1662,7 +1658,7 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 5: // changer Email
-                    Console.WriteLine(espace + "Veuillez entrer votre nouvelle adresse e-mail :");
+                    Console.Write(espace + "Veuillez entrer votre nouvelle adresse e-mail : ");
                     string nouveauMail = SaisirString(50);
                     if (UpdateMailSimple(connection, membre.Id, nouveauMail))
                     {
@@ -1676,7 +1672,7 @@ namespace BDD_Salle_de_Sport
                     break;
 
                 case 6: // changer mdp
-                    Console.WriteLine(espace + "Veuillez entrer votre mot de passe actuel :");
+                    Console.Write(espace + "Veuillez entrer votre mot de passe actuel : ");
                     string mdp = Console.ReadLine();
                     if (mdp == membre.MotDePasse)
                     {
@@ -1838,9 +1834,9 @@ namespace BDD_Salle_de_Sport
             string confirmationMotDePasse;
             do
             {
-                Console.WriteLine(espace + "Veuillez entrer votre mot de passe :");
+                Console.Write(espace + "Veuillez entrer votre mot de passe : ");
                 motDePasse = Console.ReadLine();
-                Console.WriteLine(espace + "Veuillez confirmer votre mot de passe :");
+                Console.Write(espace + "Veuillez confirmer votre mot de passe : ");
                 confirmationMotDePasse = Console.ReadLine();
             }
             while (motDePasse != confirmationMotDePasse && motDePasse.Length <= 50);
@@ -1853,7 +1849,7 @@ namespace BDD_Salle_de_Sport
             bool valide = false;
             do
             {
-                Console.WriteLine("Entrez la date et l'heure (format : JJ/MM/AAAA HH:MM) :");
+                Console.Write("Entrez la date et l'heure (format : JJ/MM/AAAA HH:MM) : ");
                 string saisie = Console.ReadLine();
                 // On essaie de convertir la saisie en vraie date
                 if (DateTime.TryParse(saisie, out date))
