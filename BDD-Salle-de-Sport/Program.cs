@@ -657,7 +657,6 @@ namespace BDD_Salle_de_Sport
                     break;
                 case 7: // Quitter le programme
                     return true;
-                    break;
                 default:
                     Console.WriteLine("Choix invalide.");
                     break;
