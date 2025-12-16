@@ -1042,7 +1042,7 @@ namespace BDD_Salle_de_Sport
 
             switch (rep)
             {
-                case 1: 
+                case 1:
                     InterfaceAjouterSpecialite(Connection);
                     break;
                 case 2:
@@ -1158,7 +1158,7 @@ namespace BDD_Salle_de_Sport
             ExecuteNonQuery(connection, sqlDelete);
             Console.WriteLine("Le cours a été supprimé.");
         }
-        static void InterfaceModifierCours(MySqlConnection connection) // A MODIF
+        static void InterfaceModifierCours(MySqlConnection connection) // Modifie tout sauf le coach et la salle
         {
             Console.WriteLine("Entrez l'ID du cours à modifier : ");
             int idCours = SaisirNombrePositif();
@@ -1166,7 +1166,15 @@ namespace BDD_Salle_de_Sport
             string nouveauNom = SaisirString(100);
             Console.WriteLine("Entrez la nouvelle durée en minutes : ");
             int nouvelleDuree = SaisirNombrePositif();
-            string sqlUpdate = "UPDATE Cours SET nom = '" + nouveauNom + "', duree_minutes = " + nouvelleDuree + " WHERE id_cours = " + idCours;
+            Console.WriteLine("Entrez la nouvelle date et heure du cours (format AAAA-MM-JJ HH:MM:SS) : ");
+            string nouvelleDateHeure = SaisirDate();
+            Console.WriteLine("Entrez le nouveau niveau de difficulté (entre 1 et 5) : ");
+            int nouveauNiveau = SaisirNombrePositif();
+            Console.WriteLine("Entrez la nouvelle intensité : ");
+            string nouvelleIntensite = SaisirString(50);
+            string sqlUpdate = "UPDATE Cours SET nom = '" + nouveauNom + "', duree_minutes = " + nouvelleDuree + ", horaire = '" 
+                + nouvelleDateHeure + "', niveau_difficulte = " + nouveauNiveau + ", intensite = '" + nouvelleIntensite 
+                + "' WHERE id_cours = " + idCours;
             ExecuteNonQuery(connection, sqlUpdate);
             Console.WriteLine("Le cours a été modifié.");
         }
