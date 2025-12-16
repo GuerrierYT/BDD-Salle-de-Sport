@@ -470,7 +470,6 @@ namespace BDD_Salle_de_Sport
                 connection = ConnecterEnTantQueMembre();
                 RemplirInfosMembre(connection, login, membre);
                 Console.WriteLine($"Bienvenue {membre.NomComplet} !");
-                Console.WriteLine(membre.toString());
                 bool stop = false;
                 while (!stop)
                 {
@@ -589,15 +588,15 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine("\nInscription d'un nouveau membre :\n");
             #region Saisie des informations
             Console.WriteLine(espace + "Veuillez entrer votre nom :");
-            string nom = Console.ReadLine();
+            string nom = SaisirString(50);
             Console.WriteLine(espace + "Veuillez entrer votre prénom :");
-            string prenom = Console.ReadLine();
+            string prenom = SaisirString(50);
             Console.WriteLine(espace + "Veuillez entrer votre adresse e-mail :");
-            string email = Console.ReadLine();
+            string email = SaisirString(100);
             Console.WriteLine(espace + "Veuillez entrer votre numéro de téléphone :");
-            string telephone = Console.ReadLine();
+            string telephone = SaisirTel();
             Console.WriteLine(espace + "Veuillez entrer votre adresse :");
-            string adresse = Console.ReadLine();
+            string adresse = SaisirString(250);
             string motDePasse = SaisirMotdePasse(espace);
             #endregion
             ExecuteNonQuery(connection, "INSERT INTO Membre (nom, prenom, adresse, numero_tel, adresse_mail, mot_de_passe) " + // Ajout du nouveau membre dans la BDD
@@ -1709,8 +1708,6 @@ namespace BDD_Salle_de_Sport
             try
             {
                 connection.Open();
-                // PLUS BESOIN DU BLOC "SET ROLE" ICI car on a donné les droits en direct !
-
                 Console.WriteLine("Connexion sécurisée 'Membre' établie.");
                 return connection; // Retourne l'objet connexion ouvert
             }
@@ -1726,7 +1723,6 @@ namespace BDD_Salle_de_Sport
 
             if (estPrincipal)
             {
-                // Connexion "Dieu" pour Thibault
                 connectionString = "server=localhost;user=admin_principal;database=GestionSalleSport;port=3306;password=MotDePasseFort1!";
                 Console.WriteLine(">> Connexion en tant qu'Admin PRINCIPAL...");
             }
@@ -1786,13 +1782,21 @@ namespace BDD_Salle_de_Sport
             do
             {
                 tel = Console.ReadLine();
-                if (tel.Length > 20 || !long.TryParse(tel, out _))
+                if (tel.Length != 10)
                 {
                     Console.WriteLine("Veuillez entrer un numéro de téléphone valide.");
                 }
                 else
                 {
+                    if(!long.TryParse(tel, out _))
+                    {
+                        Console.WriteLine("Veuillez entrer un numéro de téléphone valide.");
+                        continue;
+                    }
+                    else
+                    {
                     valide = true;
+                    }
                 }
             }
             while (!valide);
