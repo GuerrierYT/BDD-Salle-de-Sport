@@ -434,7 +434,7 @@ namespace BDD_Salle_de_Sport
         {
             string login = "";
             string password = "";
-            Console.Write("Login : ");
+            Console.Write("\nLogin : ");
             login = Console.ReadLine();
             Console.Write("Password : ");
             password = Console.ReadLine();
@@ -468,9 +468,9 @@ namespace BDD_Salle_de_Sport
                 FermetureConnexionUtilisateur(connection);
                 Membre membre = new Membre();
                 connection = ConnecterEnTantQueMembre();
-                RemplirInfosMembre(connection, login, membre);
-                Console.WriteLine($"Bienvenue {membre.NomComplet} !");
-                Console.WriteLine(membre.toString());
+                RemplirInfosMembre(connection, login, membre); // Remplit les infos du membre connecté dans l'objet membre
+                Console.WriteLine($"\nBienvenue {membre.NomComplet} !");
+                //Console.WriteLine(membre.toString());
                 bool stop = false;
                 while (!stop)
                 {
@@ -555,7 +555,7 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine(espace + "3) Quitter le programme.");
             do
             {
-                Console.WriteLine("\nVotre choix : ");
+                Console.Write("\nVotre choix : ");
                 string choix = Console.ReadLine();
                 try
                 {
@@ -623,7 +623,7 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine(espace + "7) Quitter le programme.");
             do
             {
-                Console.WriteLine("\nVotre choix : ");
+                Console.Write("\nVotre choix : ");
                 string choix = Console.ReadLine();
                 try
                 {
@@ -675,7 +675,7 @@ namespace BDD_Salle_de_Sport
 
             do
             {
-                Console.WriteLine("\nVotre choix : ");
+                Console.Write("\nVotre choix : ");
                 string choix = Console.ReadLine();
                 try
                 {
@@ -732,7 +732,7 @@ namespace BDD_Salle_de_Sport
 
             do
             {
-                Console.WriteLine("\nVotre choix : ");
+                Console.Write("\nVotre choix : ");
                 string choix = Console.ReadLine();
                 try
                 {
@@ -817,7 +817,7 @@ namespace BDD_Salle_de_Sport
 
             do
             {
-                Console.WriteLine("\nVotre choix : ");
+                Console.Write("\nVotre choix : ");
                 string choix = Console.ReadLine();
                 try
                 {
@@ -870,7 +870,7 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine(espace + "5) Retour au menu précédent.");
             do
             {
-                Console.WriteLine("\nVotre choix : ");
+                Console.Write("\nVotre choix : ");
                 string choix = Console.ReadLine();
                 try
                 {
@@ -916,7 +916,7 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine(espace + "6) Retour au menu précédent.");
             do
             {
-                Console.WriteLine("\nVotre choix : ");
+                Console.Write("\nVotre choix : ");
                 string choix = Console.ReadLine();
                 try
                 {
@@ -1027,7 +1027,7 @@ namespace BDD_Salle_de_Sport
 
             do
             {
-                Console.WriteLine("\nVotre choix : ");
+                Console.Write("\nVotre choix : ");
                 string choix = Console.ReadLine();
                 try
                 {
@@ -1405,7 +1405,7 @@ namespace BDD_Salle_de_Sport
             bool termine = false;
             do
             {
-                Console.WriteLine("\nVotre choix : ");
+                Console.Write("\nVotre choix : ");
                 string choix = Console.ReadLine();
                 try
                 {
@@ -1436,8 +1436,8 @@ namespace BDD_Salle_de_Sport
                     Console.WriteLine("--- LISTE DES COURS (ID | Cours | Coach | Salle | Date | Durée | Niv. | Intensité) ---");
 
                     // On ajoute C.duree_minutes, C.niveau_difficulte, C.intensite à la liste
-                    string sqlAfficher = "SELECT C.id_cours, C.nom, Coach.nom, Salle.nom, C.horaire, " +
-                                         "C.duree_minutes, C.niveau_difficulte, C.intensite " +
+                    string sqlAfficher = "SELECT C.id_cours AS ID, C.nom AS Cours, Coach.nom AS Coach, Salle.nom AS Salle, C.horaire AS Date, " +
+                                         "C.duree_minutes AS Durée, C.niveau_difficulte AS Niveau, C.intensite AS Intensité " +
                                          "FROM Cours C " +
                                          "JOIN Coach ON C.id_coach = Coach.id_coach " +
                                          "JOIN Salle ON C.id_salle = Salle.id_salle " +
@@ -1590,7 +1590,7 @@ namespace BDD_Salle_de_Sport
 
             do
             {
-                Console.WriteLine("\nVotre choix : ");
+                Console.Write("\nVotre choix : ");
                 string choix = Console.ReadLine();
                 try
                 {
@@ -1719,12 +1719,12 @@ namespace BDD_Salle_de_Sport
                 connection.Open();
                 // PLUS BESOIN DU BLOC "SET ROLE" ICI car on a donné les droits en direct !
 
-                Console.WriteLine("Connexion sécurisée 'Membre' établie.");
+                Console.WriteLine("\nConnexion sécurisée 'Membre' établie.");
                 return connection; // Retourne l'objet connexion ouvert
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine("Erreur critique : " + ex.Message);
+                Console.WriteLine("\nErreur critique : " + ex.Message);
                 return null; // Retourne null si ça a échoué
             }
         }
