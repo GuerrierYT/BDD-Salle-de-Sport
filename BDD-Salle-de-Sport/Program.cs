@@ -355,6 +355,29 @@ namespace BDD_Salle_de_Sport
             string query = "DELETE FROM Membre WHERE id_membre = " + idMembre;
             ExecuteNonQuery(connection, query);
         }
+
+        static void ValiderMembre(MySqlConnection connection)
+        {
+            Console.WriteLine("\n--- VALIDATION D'UNE INSCRIPTION ---");
+
+            InterfaceAffichageInscription(connection);
+
+            Console.WriteLine("\nEntrez l'ID du membre à valider (pour l'accepter dans la salle) :");
+            int idMembre = SaisirNombrePositif();
+
+            string query = "UPDATE Membre SET admis = 1 WHERE id_membre = " + idMembre;
+
+            try
+            {
+                // On utilise ta fonction ExecuteNonQuery
+                ExecuteNonQuery(connection, query);
+                Console.WriteLine($"Le membre ID {idMembre} a été validé avec succès !");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur : " + ex.Message);
+            }
+        }
         #endregion
 
         #region Gestion Connexion Utilisateur (terminé)
@@ -572,7 +595,8 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine(espace + "2) Gérer les coachs.");
             Console.WriteLine(espace + "3) Gérer les cours.");
             Console.WriteLine(espace + "4) Gérer les inscriptions.");
-            Console.WriteLine(espace + "5) Quitter le programme.");
+            Console.WriteLine(espace + "5) Voir les évaluations.");
+            Console.WriteLine(espace + "6) Quitter le programme.");
             do
             {
                 Console.WriteLine("\nVotre choix : ");
@@ -586,7 +610,7 @@ namespace BDD_Salle_de_Sport
                     Console.WriteLine("Veuillez entrer un nombre valide.");
                 }
             }
-            while (rep < 0 || rep > 5);
+            while (rep < 0 || rep > 6);
             switch (rep)
             {
                 case 1: //Gérer les membres
@@ -602,7 +626,11 @@ namespace BDD_Salle_de_Sport
                     InterfaceGestionInscriptions(Connection, espace);
                     break;
                 case 5: // Quitter le programme
+                    InterfaceEvaluation(Connection);
+                    break;
+                case 6: // Quitter le programme
                     return true;
+                    break;
                 default:
                     Console.WriteLine("Choix invalide.");
                     rep = -1;
@@ -856,7 +884,8 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine(espace + "2) Supprimer une inscription.");
             Console.WriteLine(espace + "3) Modifier une inscription.");
             Console.WriteLine(espace + "4) Voir la liste des inscriptions.");
-            Console.WriteLine(espace + "5) Retour au menu précédent.");
+            Console.WriteLine(espace + "5) Valider une inscription.");
+            Console.WriteLine(espace + "6) Retour au menu précédent.");
             do
             {
                 Console.WriteLine("\nVotre choix : ");
@@ -870,7 +899,7 @@ namespace BDD_Salle_de_Sport
                     Console.WriteLine("Veuillez entrer un nombre valide.");
                 }
             }
-            while (rep < 0 || rep > 5);
+            while (rep < 0 || rep > 6);
             switch (rep)
             {
                 case 1: //Inscrire un nouveau membre
@@ -891,13 +920,72 @@ namespace BDD_Salle_de_Sport
                 case 4: // Voir la liste des inscriptions
                     InterfaceAffichageInscription(Connection);
                     break;
-                case 5: // Retour au menu précédent
+
+                case 5: // Valider une inscription
+                    ValiderMembre(Connection);
+                    break;
+
+                case 6: // Retour au menu précédent
 
                     break;
                 default:
                     Console.WriteLine("Choix invalide.");
                     break;
             }
+        }
+        static void InterfaceEvaluation(MySqlConnection connection)
+        {
+            Console.Clear();
+            Console.WriteLine("=== INTERFACE ÉVALUATION & STATISTIQUES ===\n");
+
+            Console.WriteLine("--- 1. INDICATEURS CLÉS (Agrégations) ---");
+            string sqlAggregats = @"
+        SELECT 
+            COUNT(*) AS 'Total Membres',
+            (SELECT COUNT(*) FROM Membre WHERE admis = 1) AS 'Membres Actifs',
+            (SELECT COUNT(*) FROM Reservations) AS 'Total Réservations',
+            (SELECT AVG(duree_minutes) FROM Cours) AS 'Durée Moy. Cours',
+            (SELECT MAX(capacite_cours) FROM Cours) AS 'Capacité Max',
+            (SELECT MIN(capacite_cours) FROM Cours) AS 'Capacité Min'
+        FROM Membre";
+
+            ExecuteQueryAfficheToutAuto(connection, sqlAggregats);
+            Console.WriteLine("\n");
+
+            Console.WriteLine("--- 2. CLASSEMENT DES COACHS (Par popularité) ---");
+            string sqlTopCoach = @"
+        SELECT Coach.nom, COUNT(Reservations.id_reservation) as Total_Inscrits
+        FROM Coach
+        JOIN Cours ON Coach.id_coach = Cours.id_coach
+        JOIN Reservations ON Cours.id_cours = Reservations.id_cours
+        GROUP BY Coach.nom
+        ORDER BY Total_Inscrits DESC";
+
+            ExecuteQueryAfficheToutAuto(connection, sqlTopCoach);
+            Console.WriteLine("\n");
+
+            Console.WriteLine("--- 3. OCCUPATION DES SALLES (Right Join) ---");
+            string sqlSalles = @"
+        SELECT Salle.nom AS Salle, COUNT(Cours.id_cours) AS Nb_Cours_Planifies
+        FROM Cours
+        RIGHT JOIN Salle ON Cours.id_salle = Salle.id_salle
+        GROUP BY Salle.nom";
+
+            ExecuteQueryAfficheToutAuto(connection, sqlSalles);
+            Console.WriteLine("\n");
+
+            Console.WriteLine("--- 4. COURS VIDES / SANS SUCCÈS (Left Join) ---");
+            string sqlCoursVides = @"
+        SELECT Cours.nom, Cours.horaire
+        FROM Cours
+        LEFT JOIN Reservations ON Cours.id_cours = Reservations.id_cours
+        WHERE Reservations.id_reservation IS NULL AND Cours.horaire > NOW()";
+
+            ExecuteQueryAfficheToutAuto(connection, sqlCoursVides);
+            Console.WriteLine("\n");
+
+            Console.WriteLine("Appuyez sur une touche pour revenir au menu...");
+            Console.ReadKey();
         }
         #endregion
 
@@ -936,9 +1024,57 @@ namespace BDD_Salle_de_Sport
         #endregion
 
         #region Cours (pas fini)
-        static void InterfaceAjouterCours(MySqlConnection connection) // A FINIR
+        static void InterfaceAjouterCours(MySqlConnection connection)
         {
+            Console.WriteLine("\n--- AJOUT D'UN NOUVEAU COURS ---\n");
 
+            Console.WriteLine("Nom du cours :");
+            string nom = SaisirString(100);
+
+            string dateHeure = SaisirDate();
+
+            Console.WriteLine("Durée en minutes :");
+            int duree = SaisirNombrePositif();
+
+            Console.WriteLine("Niveau de difficulté (ex: Débutant, Avancé...) entre 1 et 5:");
+            int diff = 0;
+            do
+            {
+                diff = SaisirNombrePositif();
+            }
+            while (diff < 1 || diff > 5);
+
+            Console.WriteLine("Intensité (ex: Haute, Moyenne...) :");
+            string intens = SaisirString(50);
+
+            Console.WriteLine("Capacité max du cours (nombre de places) :");
+            int capacite = SaisirNombrePositif();
+
+            Console.WriteLine("\n--- CHOIX DU COACH ---");
+            ExecuteQueryAfficheToutAuto(connection, "SELECT id_coach, nom FROM Coach");
+            Console.WriteLine("Entrez l'ID du coach pour ce cours :");
+            int idCoach = SaisirNombrePositif();
+
+            Console.WriteLine("\n--- CHOIX DE LA SALLE ---");
+            ExecuteQueryAfficheToutAuto(connection, "SELECT id_salle, nom FROM Salle");
+            Console.WriteLine("Entrez l'ID de la salle :");
+            int idSalle = SaisirNombrePositif();
+
+            string query = "INSERT INTO Cours (nom, horaire, duree_minutes, niveau_difficulte, intensite, capacite_cours, id_coach, id_salle) " +
+                           "VALUES ('" + nom + "', '" + dateHeure + "', " + duree + ", '" + diff + "', '" + intens + "', " + capacite + ", " + idCoach + ", " + idSalle + ")";
+
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.ExecuteNonQuery();
+                Console.WriteLine("\nLe cours a été créé avec succès !");
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine("\nErreur : Impossible de créer le cours.");
+                Console.WriteLine("Vérifiez que l'ID du Coach et l'ID de la Salle existent bien.");
+                Console.WriteLine("Détail technique : " + ex.Message);
+            }
         }
         static void InterfaceSupprimerCours(MySqlConnection connection) // A tester
         {
@@ -1469,6 +1605,37 @@ namespace BDD_Salle_de_Sport
             }
             while (motDePasse != confirmationMotDePasse && motDePasse.Length <= 50);
             return motDePasse;
+        }
+
+        static string SaisirDate()
+        {
+            DateTime date;
+            bool valide = false;
+            do
+            {
+                Console.WriteLine("Entrez la date et l'heure (format : JJ/MM/AAAA HH:MM) :");
+                string saisie = Console.ReadLine();
+                // On essaie de convertir la saisie en vraie date
+                if (DateTime.TryParse(saisie, out date))
+                {
+                    // On vérifie que la date est dans le futur
+                    if (date > DateTime.Now)
+                    {
+                        valide = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Erreur : La date doit être dans le futur.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Format invalide. Exemple : 25/12/2024 14:30");
+                }
+            } while (!valide);
+
+            // On retourne la date formatée pour MySQL (Année-Mois-Jour Heure:Minute:Seconde)
+            return date.ToString("yyyy-MM-dd HH:mm:ss");
         }
         #endregion
     }
