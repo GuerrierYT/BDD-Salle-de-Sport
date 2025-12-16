@@ -8,12 +8,35 @@ namespace BDD_Salle_de_Sport
     {
         static void Main(string[] args)
         {
+            AfficherIntro();
             string espace = "                                        ";
             MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données en tant que root
             connection = ConnexionUtilisateur(connection, espace); // Gère la connexion utilisateur (admin/membre)
 
             FermetureConnexionUtilisateur(connection);
             Console.ReadKey();
+        }
+        static void AfficherIntro()
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(@"
+                ██████╗ ██╗   ██╗███╗   ███╗
+                ██╔════╝ ╚██╗ ██╔╝████╗ ████║
+                ██║  ███╗ ╚████╔╝ ██╔████╔██║
+                ██║   ██║  ╚██╔╝  ██║╚██╔╝██║
+                ╚██████╔╝   ██║   ██║ ╚═╝ ██║
+                 ╚═════╝    ╚═╝   ╚═╝     ╚═╝
+                ███╗   ███╗ █████╗ ███╗   ██╗ █████╗  ██████╗ ███████╗██████╗ 
+                ████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝ ██╔════╝██╔══██╗
+                ██╔████╔██║███████║██╔██╗ ██║███████║██║  ███╗█████╗  ██████╔╝
+                ██║╚██╔╝██║██╔══██║██║╚██╗██║██╔══██║██║   ██║██╔══╝  ██╔══██╗
+                ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝███████╗██║  ██║
+                ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝
+                ");
+
+            Console.ResetColor(); // On remet la couleur normale (blanc/gris)
+            Console.WriteLine("\n\t>>> Système de Gestion de salle de sport <<<\n");
+            Console.WriteLine("----------------------------------------------------------\n");
         }
         static MySqlConnection ConnectToDatabase() // Connexion en tant que root pour vérifier les identifiants
         {
@@ -163,7 +186,7 @@ namespace BDD_Salle_de_Sport
                     {
                         entetes[i] = reader.GetName(i);
                         largeursColonnes[i] = entetes[i].Length; // La largeur min est la longueur du nom de la colonne
-                    } 
+                    }
                     while (reader.Read()) // Lecture de chaque ligne
                     {
                         string[] ligneActuelle = new string[reader.FieldCount];
@@ -424,21 +447,23 @@ namespace BDD_Salle_de_Sport
                 connection = ConnecterEnTantQueAdmin(estPrincipal);
                 Console.WriteLine("Bienvenue Administrateur !");
                 bool stop = false;
-                while (!stop)
+
+                if (estPrincipal)
                 {
-                    if (estPrincipal)
+                    Console.WriteLine("Vous êtes connecté en tant qu'administrateur principal.");
+                    while (!stop)
                     {
-                        Console.WriteLine("Vous êtes connecté en tant qu'administrateur principal.");
                         stop = InterfaceAdminPrincipal(connection, espace);
                     }
-                    else
+                }
+                else
+                {
+                    Console.WriteLine("Vous êtes connecté en tant qu'administrateur secondaire.");
+                    while (!stop)
                     {
-                        Console.WriteLine("Vous êtes connecté en tant qu'administrateur secondaire.");
                         stop = InterfaceAdminSecondaire(connection, espace);
                     }
                 }
-
-
             }
             else if (UtilisateurEstMembre(connection, login, password))
             {
