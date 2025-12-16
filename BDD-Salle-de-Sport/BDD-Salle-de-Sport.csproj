@@ -92,13 +92,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin.cs" />
-    <Compile Include="Coach.cs" />
-    <Compile Include="Cours.cs" />
     <Compile Include="Membre.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Salle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
