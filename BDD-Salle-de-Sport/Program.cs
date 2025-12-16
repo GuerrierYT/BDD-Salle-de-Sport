@@ -12,9 +12,7 @@ namespace BDD_Salle_de_Sport
             string espace = "                                        ";
             MySqlConnection connection = ConnectToDatabase(); // Établit la connexion à la base de données en tant que root
             connection = ConnexionUtilisateur(connection, espace); // Gère la connexion utilisateur (admin/membre)
-
             FermetureConnexionUtilisateur(connection);
-            Console.ReadKey();
         }
         static void AfficherIntro()
         {
@@ -1127,8 +1125,8 @@ namespace BDD_Salle_de_Sport
         static void InterfaceAffichageCours(MySqlConnection connection) // FINI (c'est magnifique)
         {
             Console.WriteLine("=== LISTE DES COURS ===");
-            string sqlCours = "SELECT C.id_cours AS id, C.nom AS cours, Coach.nom AS coach, Salle.nom AS salle, C.horaire, " +
-                              "C.duree_minutes AS durée, C.niveau_difficulte AS difficulté, C.intensite " +
+            string sqlCours = "SELECT C.id_cours AS ID, C.nom AS Cours, Coach.nom AS Coach, Salle.nom AS Salle, C.horaire AS Horaire, " +
+                              "C.duree_minutes AS Durée, C.niveau_difficulte AS Difficulté, C.intensite AS Intensité " +
                               "FROM Cours C " +
                               "JOIN Coach ON C.id_coach = Coach.id_coach " +
                               "JOIN Salle ON C.id_salle = Salle.id_salle ";
