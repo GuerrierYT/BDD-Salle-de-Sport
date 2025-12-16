@@ -596,7 +596,8 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine(espace + "3) Gérer les cours.");
             Console.WriteLine(espace + "4) Gérer les inscriptions.");
             Console.WriteLine(espace + "5) Voir les évaluations.");
-            Console.WriteLine(espace + "6) Quitter le programme.");
+            Console.WriteLine(espace + "6) Gérer les spécialités.");
+            Console.WriteLine(espace + "7) Quitter le programme.");
             do
             {
                 Console.WriteLine("\nVotre choix : ");
@@ -610,7 +611,7 @@ namespace BDD_Salle_de_Sport
                     Console.WriteLine("Veuillez entrer un nombre valide.");
                 }
             }
-            while (rep < 0 || rep > 6);
+            while (rep < 0 || rep > 7);
             switch (rep)
             {
                 case 1: //Gérer les membres
@@ -628,12 +629,14 @@ namespace BDD_Salle_de_Sport
                 case 5: // Quitter le programme
                     InterfaceEvaluation(Connection);
                     break;
-                case 6: // Quitter le programme
+                case 6:
+                    InterfaceGestionSpecialites(Connection, espace);
+                    break;
+                case 7: // Quitter le programme
                     return true;
                     break;
                 default:
                     Console.WriteLine("Choix invalide.");
-                    rep = -1;
                     break;
             }
             return false;
@@ -990,6 +993,52 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine("Appuyez sur une touche pour revenir au menu...");
             Console.ReadKey();
         }
+        static void InterfaceGestionSpecialites(MySqlConnection Connection, string espace)
+        {
+            int rep = 0;
+            Console.WriteLine("\n=== GESTION DES SPÉCIALITÉS ===");
+            Console.WriteLine(espace + "1) Ajouter une spécialité.");
+            Console.WriteLine(espace + "2) Modifier une spécialité.");
+            Console.WriteLine(espace + "3) Supprimer une spécialité.");
+            Console.WriteLine(espace + "4) Voir la liste des spécialités.");
+            Console.WriteLine(espace + "5) Retour au menu principal.");
+
+            do
+            {
+                Console.WriteLine("\nVotre choix : ");
+                string choix = Console.ReadLine();
+                try
+                {
+                    rep = Convert.ToInt32(choix);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Nombre invalide.");
+                }
+            }
+            while (rep < 0 || rep > 5);
+
+            switch (rep)
+            {
+                case 1: 
+                    InterfaceAjouterSpecialite(Connection);
+                    break;
+                case 2:
+                    InterfaceModifierSpecialite(Connection);
+                    break;
+                case 3:
+                    InterfaceSupprimerSpecialite(Connection);
+                    break;
+                case 4:
+                    InterfaceAfficherSpecialites(Connection);
+                    Console.WriteLine("Appuyez sur une touche...");
+                    Console.ReadKey();
+                    break;
+                case 5:
+                    break;
+            }
+        }
+
         #endregion
 
         #region Sous-sous-interfaces Admins (pas fini)
@@ -1232,6 +1281,80 @@ namespace BDD_Salle_de_Sport
                 }
             }
         }
+        #endregion
+
+        #region Spécialités (à tester)
+        static void InterfaceAjouterSpecialite(MySqlConnection connection)
+        {
+            Console.WriteLine("\n--- AJOUT D'UNE NOUVELLE SPÉCIALITÉ ---");
+
+            Console.WriteLine("Nom de la spécialité (ex: Yoga, Boxe...) :");
+            string nom = SaisirString(50);
+
+            Console.WriteLine("Description courte :");
+            string description = SaisirString(255);
+
+            string sqlInsert = "INSERT INTO Specialite (nom, description) VALUES ('" + nom + "', '" + description + "')";
+
+            try
+            {
+                ExecuteNonQuery(connection, sqlInsert);
+                Console.WriteLine("Spécialité ajoutée avec succès !");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur : " + ex.Message);
+            }
+        }
+        static void InterfaceModifierSpecialite(MySqlConnection connection)
+        {
+            Console.WriteLine("\n--- MODIFICATION D'UNE SPÉCIALITÉ ---");
+
+            // 1. On affiche la liste pour choisir
+            InterfaceAfficherSpecialites(connection);
+
+            Console.WriteLine("\nEntrez l'ID de la spécialité à modifier :");
+            int idSpe = SaisirNombrePositif();
+
+            // 2. Saisie des nouvelles infos
+            Console.WriteLine("Nouveau nom :");
+            string nouveauNom = SaisirString(50);
+
+            Console.WriteLine("Nouvelle description :");
+            string nouvelleDesc = SaisirString(255);
+
+            string sqlUpdate = "UPDATE Specialite SET nom = '" + nouveauNom + "', description = '" + nouvelleDesc + "' WHERE id_spe = " + idSpe;
+
+            try
+            {
+                ExecuteNonQuery(connection, sqlUpdate);
+                Console.WriteLine("Spécialité modifiée avec succès !");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur : " + ex.Message);
+            }
+        }
+        static void InterfaceSupprimerSpecialite(MySqlConnection connection)
+        {
+            Console.WriteLine("\n--- SUPPRESSION D'UNE SPÉCIALITÉ ---");
+            InterfaceAfficherSpecialites(connection);
+
+            Console.WriteLine("\nEntrez l'ID de la spécialité à supprimer :");
+            int idSpe = SaisirNombrePositif();
+
+            string sqlDelete = "DELETE FROM Specialite WHERE id_spe = " + idSpe;
+
+            ExecuteNonQuery(connection, sqlDelete);
+            Console.WriteLine("Spécialité supprimée.");
+        }
+        static void InterfaceAfficherSpecialites(MySqlConnection connection)
+        {
+            Console.WriteLine("\n=== LISTE DES SPÉCIALITÉS (ID | Nom | Description) ===");
+            string sql = "SELECT id_spe, nom, description FROM Specialite";
+            ExecuteQueryAfficheToutAuto(connection, sql);
+        }
+
         #endregion
         #endregion
         #endregion
