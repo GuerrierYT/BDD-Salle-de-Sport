@@ -787,7 +787,8 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine(espace + "3) Modifier un coach.");
             Console.WriteLine(espace + "4) Rechercher un coach.");
             Console.WriteLine(espace + "5) Voir la liste des coachs.");
-            Console.WriteLine(espace + "6) Retour au menu précédent.");
+            Console.WriteLine(espace + "6) Gérer les spécialités.");
+            Console.WriteLine(espace + "7) Retour au menu précédent.");
 
             do
             {
@@ -802,7 +803,7 @@ namespace BDD_Salle_de_Sport
                     Console.WriteLine("Veuillez entrer un nombre valide.");
                 }
             }
-            while (rep < 0 || rep > 6);
+            while (rep < 0 || rep > 7);
             switch (rep)
             {
 
@@ -821,12 +822,14 @@ namespace BDD_Salle_de_Sport
                 case 5: // Voir la liste des coachs
                     InterfaceAffichageCoachs(Connection);
                     break;
-                case 6: // Retour au menu précédent
+                case 6:
+                    GererSpecialitesCoach(Connection);
+                    break;
+                case 7: // Retour au menu précédent
                     break;
 
                 default:
                     Console.WriteLine("Choix invalide.");
-                    rep = -1;
                     break;
             }
             return rep;
@@ -1076,7 +1079,7 @@ namespace BDD_Salle_de_Sport
                 Console.WriteLine("Détail technique : " + ex.Message);
             }
         }
-        static void InterfaceSupprimerCours(MySqlConnection connection) // A tester
+        static void InterfaceSupprimerCours(MySqlConnection connection) //FINI
         {
             Console.WriteLine("Entrez l'ID du cours à supprimer : ");
             int idCours = SaisirNombrePositif();
@@ -1084,7 +1087,7 @@ namespace BDD_Salle_de_Sport
             ExecuteNonQuery(connection, sqlDelete);
             Console.WriteLine("Le cours a été supprimé.");
         }
-        static void InterfaceModifierCours(MySqlConnection connection) // A tester
+        static void InterfaceModifierCours(MySqlConnection connection) // A MODIF
         {
             Console.WriteLine("Entrez l'ID du cours à modifier : ");
             int idCours = SaisirNombrePositif();
@@ -1111,9 +1114,22 @@ namespace BDD_Salle_de_Sport
         #region Coachs (à tester / vérifier)
         static void InterfaceAjouterCoach(MySqlConnection connection) // A tester
         {
-            Console.WriteLine("Entrez le nom du nouveau coach : ");
-            string nomCoach = SaisirString(100);
-            string sqlInsert = "INSERT INTO Coach (nom) VALUES ('" + nomCoach + "')";
+            Console.WriteLine("Nom du nouveau coach : ");
+            string nomCoach = SaisirString(50);
+
+            Console.WriteLine("Prenom du nouveau coach :");
+            string prenomCoach = SaisirString(50);
+
+            Console.WriteLine("Numéro de télphone du nouveau coach :");
+            string telCoach = SaisirTel();
+
+            Console.WriteLine("Email du nouveau coach :");
+            string EmailCoach = SaisirString(100);
+
+            Console.WriteLine("Formation(s) du nouveau coach :");
+            string FormationCoach = SaisirString(500);
+
+            string sqlInsert = "INSERT INTO Coach (nom,prenom,numero_tel,adresse_mail,formation) VALUES ('" + nomCoach + "' , '" + prenomCoach + "' , '" + telCoach + "' , '" + EmailCoach + "' , '" + FormationCoach + "')";
             ExecuteNonQuery(connection, sqlInsert);
             Console.WriteLine("Le coach a été ajouté.");
         }
@@ -1151,6 +1167,70 @@ namespace BDD_Salle_de_Sport
             Console.WriteLine("=== LISTE DES COACHS (ID | Nom) ===");
             string sqlCoachs = "SELECT id_coach, nom FROM Coach";
             ExecuteQueryAfficheToutAuto(connection, sqlCoachs);
+        }
+        static void GererSpecialitesCoach(MySqlConnection connection)
+        {
+            Console.WriteLine("\n--- GESTION DES SPÉCIALITÉS D'UN COACH ---");
+
+            // 1. On choisit le coach
+            InterfaceAffichageCoachs(connection); // On affiche la liste pour aider
+            Console.WriteLine("\nEntrez l'ID du coach à gérer :");
+            int idCoach = SaisirNombrePositif();
+
+            // 2. On affiche ses spécialités actuelles
+            Console.WriteLine($"\n--- Spécialités actuelles du coach {idCoach} ---");
+            string sqlSpecialitesActuelles = "SELECT S.id_spe, S.nom " +
+                                             "FROM Specialite S " +
+                                             "JOIN Coach_Specialites CS ON S.id_spe = CS.id_spe " +
+                                             "WHERE CS.id_coach = " + idCoach;
+
+            ExecuteQueryAfficheToutAuto(connection, sqlSpecialitesActuelles);
+
+            // 3. Menu d'actions
+            Console.WriteLine("\nQue voulez-vous faire ?");
+            Console.WriteLine("1. Ajouter une spécialité à ce coach");
+            Console.WriteLine("2. Retirer une spécialité à ce coach");
+            Console.WriteLine("3. Retour");
+
+            int choix = SaisirNombrePositif();
+
+            if (choix == 1) // AJOUTER
+            {
+                Console.WriteLine("\n--- LISTE DES SPÉCIALITÉS DISPONIBLES ---");
+                ExecuteQueryAfficheToutAuto(connection, "SELECT * FROM Specialite");
+
+                Console.WriteLine("Entrez l'ID de la spécialité à ajouter :");
+                int idSpe = SaisirNombrePositif();
+
+                string sqlAjout = "INSERT INTO Coach_Specialites (id_coach, id_spe) VALUES (" + idCoach + ", " + idSpe + ")";
+
+                try
+                {
+                    ExecuteNonQuery(connection, sqlAjout);
+                    Console.WriteLine("Spécialité ajoutée au coach !");
+                }
+                catch (MySqlException)
+                {
+                    Console.WriteLine("Erreur : Ce coach possède déjà cette spécialité ou l'ID est incorrect.");
+                }
+            }
+            else if (choix == 2) // RETIRER
+            {
+                Console.WriteLine("Entrez l'ID de la spécialité à retirer :");
+                int idSpe = SaisirNombrePositif();
+
+                string sqlRetrait = "DELETE FROM Coach_Specialites WHERE id_coach = " + idCoach + " AND id_spe = " + idSpe;
+
+                try
+                {
+                    ExecuteNonQuery(connection, sqlRetrait);
+                    Console.WriteLine("Spécialité retirée du coach !");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Erreur : " + ex.Message);
+                }
+            }
         }
         #endregion
         #endregion
