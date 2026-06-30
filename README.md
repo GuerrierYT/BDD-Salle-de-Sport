@@ -2,10 +2,12 @@
 
 Application console C# permettant de gérer une salle de sport connectée à une base de données MySQL.
 
-Le programme propose deux espaces principaux :
+Le programme propose actuellement deux espaces principaux dans le code :
 
 - un espace administrateur pour gérer les membres, coachs, cours, inscriptions, spécialités et statistiques ;
 - un espace membre pour consulter son profil, modifier ses informations et gérer ses réservations de cours.
+
+La base peut également contenir des comptes fonctionnels pour les coachs et un compte de gérant de salle. Dans l'état actuel du code, le gérant correspond au profil administrateur principal si son compte est enregistré dans la table `Administrateur` avec le rôle attendu. Les comptes coachs doivent être prévus dans le script SQL ou le jeu de données, mais aucun menu de connexion coach séparé n'est encore routé dans `Program.cs`.
 
 ## Technologies
 
@@ -37,7 +39,8 @@ Le programme propose deux espaces principaux :
 
 ### Connexion et inscription
 
-- connexion en tant qu'administrateur ou membre ;
+- connexion en tant qu'administrateur, gérant ou membre ;
+- présence possible de comptes coachs dans la base de données ;
 - inscription d'un nouveau membre ;
 - validation d'une inscription par un administrateur ;
 - séparation entre administrateur principal, administrateur secondaire et membre.
@@ -123,6 +126,17 @@ Comptes MySQL ensuite utilisés par l'application :
 | Administrateur secondaire | `admin_app` | `MotDePasseApp2!` |
 | Membre | `membre_client` | `Membre` |
 
+Ces comptes MySQL sont des comptes techniques utilisés pour ouvrir les connexions à la base après authentification. Ils ne remplacent pas les comptes fonctionnels stockés dans les tables métier, par exemple les comptes administrateur/gérant, membre et coach.
+
+Comptes fonctionnels attendus côté application :
+
+| Profil | Stockage attendu | Remarque |
+| --- | --- | --- |
+| Gérant de salle | `Administrateur` | À traiter comme administrateur principal, avec `role = 'Principal'`. |
+| Administrateur secondaire | `Administrateur` | Donne accès au menu administrateur secondaire. |
+| Membre | `Membre` | Connexion avec `adresse_mail` et `mot_de_passe`; accès seulement si `admis = 1`. |
+| Coach | À prévoir dans le schéma SQL ou le jeu de données | Des données coachs existent dans `Coach`; le code actuel gère les coachs côté admin mais ne route pas encore un espace coach dédié. |
+
 Le dépôt ne contient pas encore de script SQL de création de base. La base doit donc être créée avant le lancement de l'application.
 
 Tables utilisées par le code :
@@ -152,7 +166,9 @@ Colonnes principales attendues par l'application :
 Au démarrage, l'application demande un login et un mot de passe.
 
 - Si les identifiants correspondent à un administrateur, le programme ouvre le menu d'administration.
+- Si les identifiants correspondent au gérant, il doit être reconnu comme administrateur principal.
 - Si les identifiants correspondent à un membre validé, le programme ouvre le menu membre.
+- Les comptes coachs sont utiles dans la base métier, mais le code actuel ne propose pas encore d'espace coach distinct au démarrage.
 - Si le membre existe mais n'est pas encore admis, l'accès est refusé jusqu'à validation par un administrateur.
 - Si aucun compte ne correspond, l'utilisateur peut réessayer, créer un compte ou quitter.
 
