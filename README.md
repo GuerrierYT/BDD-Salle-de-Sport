@@ -16,24 +16,30 @@ La base peut également contenir des comptes fonctionnels pour les coachs et un 
 - MySQL
 - Connecteur `MySql.Data`
 - Gestion des dépendances via `packages.config`
-- Solution Visual Studio au format `.slnx`
+- Projet Visual Studio au format `.csproj`
 
 ## Structure du projet
 
 ```text
 .
-├── BDD-Salle-de-Sport.slnx
-├── BDD-Salle-de-Sport/
-│   ├── App.config
-│   ├── BDD-Salle-de-Sport.csproj
-│   ├── Membre.cs
-│   ├── Program.cs
-│   ├── Properties/
-│   └── packages.config
-├── packages/
-├── .gitignore
-└── README.md
+|-- BDD-Salle-de-Sport/
+|   |-- App.config
+|   |-- BDD-Salle-de-Sport.csproj
+|   |-- Membre.cs
+|   |-- Program.cs
+|   |-- Properties/
+|   |   `-- AssemblyInfo.cs
+|   `-- packages.config
+|-- .gitignore
+`-- README.md
 ```
+
+Les dossiers suivants peuvent exister en local, mais ne doivent pas être versionnés :
+
+- `.vs/`
+- `packages/`
+- `BDD-Salle-de-Sport/bin/`
+- `BDD-Salle-de-Sport/obj/`
 
 ## Fonctionnalités
 
@@ -86,7 +92,7 @@ cd BDD-Salle-de-Sport
 nuget restore .\BDD-Salle-de-Sport\packages.config -PackagesDirectory .\packages
 ```
 
-3. Ouvrir la solution `BDD-Salle-de-Sport.slnx` dans Visual Studio.
+3. Ouvrir le projet `BDD-Salle-de-Sport/BDD-Salle-de-Sport.csproj` dans Visual Studio.
 
 4. Compiler le projet en `Debug` ou `Release`.
 
